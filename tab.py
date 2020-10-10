@@ -4,7 +4,7 @@ class tab(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
 
-        body = Frame(self,height=2, bd=1, relief="sunken")
+        body = Frame(self)
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
         self.maintext()

@@ -31,20 +31,11 @@ if __name__ == '__main__':
     root = tk.Tk()
     tabview=ttk.Notebook(root)
 
-    tab1=tk.Frame(tabview)
-    tabview.add(tab1, text='Label')
-
-    tab2 = tk.Frame(tabview)
-    tabview.add(tab2, text='Button')
 
     tab3=Xiaxinwen(tabview)
     tabview.add(tab3,text="test")
 
-    label1 = tk.Label(tab1, text='标签1')
-    label1.pack()
-    button1 = tk.Button(tab2, text='按钮1', width=20)
-    button1.pack()
 
     tabview.pack(expand = True, fill = tk.BOTH)
-    set_win_center(root, 300, 300)
+    set_win_center(root, 500, 300)
     root.mainloop()
