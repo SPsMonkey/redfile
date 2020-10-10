@@ -1,4 +1,5 @@
 import tkinter as tk
+from XiaXingWen import Xiaxinwen
 from tkinter import ttk
 
 def set_win_center(root, curWidth='', curHight=''):
@@ -35,6 +36,9 @@ if __name__ == '__main__':
 
     tab2 = tk.Frame(tabview)
     tabview.add(tab2, text='Button')
+
+    tab3=Xiaxinwen(tabview)
+    tabview.add(tab3,text="test")
 
     label1 = tk.Label(tab1, text='标签1')
     label1.pack()
