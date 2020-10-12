@@ -5,6 +5,7 @@ class tab(Frame):
         Frame.__init__(self, parent)
 
         body = Frame(self)
+        self.FrameBody=body
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
         self.maintext()
