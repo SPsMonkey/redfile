@@ -33,9 +33,9 @@ if __name__ == '__main__':
 
 
     tab3=Xiaxinwen(tabview)
-    tabview.add(tab3,text="test")
+    tabview.add(tab3,text="下行文")
 
 
     tabview.pack(expand = True, fill = tk.BOTH)
-    set_win_center(root, 500, 300)
+    set_win_center(root, 500, 600)
     root.mainloop()
