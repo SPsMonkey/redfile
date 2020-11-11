@@ -152,6 +152,18 @@ def add_content(s,str):
     s.ParagraphFormat.Alignment = 0
     s.TypeText(str)
 
+def add_name_date(s,name,date):
+    s.TypeText("\n\n\n")
+    s.ParagraphFormat.Alignment = 2
+    s.TypeText(name)
+    s.TypeText("\b\b\b\b\n")
+    s.TypeText(date)
+    s.TypeText("\b\b\b\b\n")
+
+def add_end(s,chaoson,):
+    pass
+
+
 def gen(data):
     app = Dispatch('word.Application')
     # 新建word文档
@@ -167,6 +179,7 @@ def gen(data):
     add_redfile_num(selection,data["发文机关代字"],data["年份"],data["发文号"])
     add_title(selection,data["标题"])
     add_content(selection,data["文件内容"])
+    add_name_date(selection,data["发文机关"][0],data["成文日期"])
 
     #156/442.5 纸张mm数比线条单位比值  33+10.5x换算成
     n=8
@@ -185,5 +198,6 @@ if __name__ == '__main__':
           "发文机关":["泸溪县农业农村局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"泸溪县农业农村局关于什么",
-          "文件内容":"局属各单位：\n根据。。。。。。。。。。"}
+          "文件内容":"局属各单位：\n根据。。。。。。。。。。",
+          "成文日期":"2020年6月12日"}
     gen(data)
