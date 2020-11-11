@@ -1,55 +1,38 @@
 from tkinter import *
 from tkinter import ttk
 import const
-import tab
+from tab import *
 import tkinter.messagebox
 
-class Xiaxinwen(tab.tab):
+class Xiaxinwen(tab):
     def body(self, master):
-        xia={}
+        xia=self.allWigets
         # 一般用6位3号阿拉伯数字
-        xia["份号"] = self.addLabel(master, "份号：", 0,0)
+        xia["份号"] = label(master, "份号：", 0,0)
 
-        xia["保密等级"] = self.addOption(master, "保密等级：", 1,0, ("无", "绝密","机密","秘密" ))
+        xia["保密等级"] = option(master, "保密等级：", 1,0, ("无", "绝密","机密","秘密" ))
 
-        xia["保密期限"]=self.addLabel(master, "保密期限：", 1,2)
+        xia["保密期限"]=label(master, "保密期限：", 1,2)
 
-        xia["紧急程度"]=self.addOption(master, "紧急程度：",3,0, ("无", "特急","加急","特提","平急" ))
+        xia["紧急程度"]=option(master, "紧急程度：",3,0, ("无", "特急","加急","特提","平急" ))
 
-        xia["发文机关代字"]=self.addLabel(master,"*发文机关代字：",4,0)
-        xia["年份"]=self.addLabel(master,"*年份：",4,2)
-        xia["发文号"]=self.addLabel(master, "*发文号：", 4, 4)
+        xia["发文机关代字"]=label(master,"*发文机关代字：",4,0)
+        xia["年份"]=label(master,"*年份：",4,2)
+        xia["发文号"]=label(master, "*发文号：", 4, 4)
         #
-        xia["发文机关"]=tab.multiRow(master,5)
-        xia["标题"]=self.addLongLabel(master,"*标题：",50,0)
-        xia["成文日期"]=self.addDate(master, "*成文日期：",51,0)
-        xia["抄送机关"] = self.addLongLabel(master, "抄送机关：", 52, 0)
-        xia["印发机关"] = self.addLongLabel(master, "*印发机关：", 53, 0)
-        xia["印发日期"] = self.addDate(master, "*印发日期：", 54, 0)
-        self.allWigets=xia
+        xia["发文机关"]=multiRow(master,5)
+        xia["标题"]=longlabel(master,"*标题：",50,0)
+        xia["成文日期"]=date(master, "*成文日期：",51,0)
+        xia["抄送机关"] = longlabel(master, "抄送机关：", 52, 0)
+        xia["印发机关"] = longlabel(master, "*印发机关：", 53, 0)
+        xia["印发日期"] = date(master, "*印发日期：", 54, 0)
+
 
     def getData(self):
         xia=self.allWigets
         data={}
-        data["份号"]=xia["份号"].get()
-        data["保密等级"] = xia["保密等级"].get()
-        data["保密期限"] = xia["保密期限"].get()
-        data["紧急程度"] = xia["紧急程度"].get()
-
-        data["发文机关代字"] = xia["发文机关代字"].get()
-        data["年份"] = xia["年份"].get()
-        data["发文号"] = xia["发文号"].get()
-
-        data["发文机关"] = xia["发文机关"].get()
-
-        data["标题"] = xia["标题"].get()
-
-        data["成文日期"] = xia["成文日期"].get()
-        data["抄送机关"] = xia["抄送机关"].get()
-        data["印发机关"] = xia["印发机关"].get()
-        data["印发日期"] = xia["印发日期"].get()
-
-        data["文件内容"]=xia["文件内容"].get('0.0','end')
+        for key in xia:
+            data[key]=xia[key].get()
         return data
 
     def check(self,data):
@@ -96,10 +79,6 @@ class Xiaxinwen(tab.tab):
         if data["文件内容"]=="\n":
             error = error + "文件内容 不能为空。\n"
         return error
-
-
-
-
 
 
     def apply(self):
