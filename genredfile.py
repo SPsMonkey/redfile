@@ -153,6 +153,10 @@ def add_content(s,str):
     s.TypeText(str)
 
 def add_name_date(s,name,date):
+    s.font.Name = '仿宋'
+    # 字号设置为三号
+    s.font.Size = 16
+    s.font.color = 0
     s.TypeText("\n\n\n")
     s.ParagraphFormat.Alignment = 2
     s.TypeText(name)
@@ -160,8 +164,28 @@ def add_name_date(s,name,date):
     s.TypeText(date)
     s.TypeText("\b\b\b\b\n")
 
-def add_end(s,chaoson,):
-    pass
+def add_end(d,s,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
+    s.ParagraphFormat.Alignment = 0
+    s.font.Name = '仿宋'
+    # 字号设置为三号
+    s.font.Size = 14
+    table=d.Tables.Add(s.Range,2,1)
+    table.LeftPadding=14
+    table.RightPadding = 14
+    # -3是底边-1 是顶边 -5是中间的水平边
+    topborder=table.Borders(-1)
+    topborder.LineStyle=1
+    topborder.LineWidth=4
+    bottomborder=table.Borders(-3)
+    bottomborder.LineStyle = 1
+    bottomborder.LineWidth = 4
+    midborder=table.Borders(-5)
+    midborder.LineStyle = 1
+    midborder.LineWidth = 2
+    s.TypeText("抄送："+chaoson)
+    s.MoveDown()
+    s.TypeText("印发机关："+yinfa+"印发日期："+date+"印发")
+
 
 
 def gen(data):
@@ -169,24 +193,31 @@ def gen(data):
     # 新建word文档
     app.Visible = True
     doc = app.Documents.Add()
-    setPage(doc)
 
+    setPage(doc)
     selection = doc.Application.Selection
     addFileNum(selection, data["份号"])
+
     add_SecurityLevel_Time(selection, data["保密等级"],data["保密期限"])
     add_emergency_level(selection,data["紧急程度"])
     add_red_title(selection,data["发文机关"])
     add_redfile_num(selection,data["发文机关代字"],data["年份"],data["发文号"])
     add_title(selection,data["标题"])
-    add_content(selection,data["文件内容"])
-    add_name_date(selection,data["发文机关"][0],data["成文日期"])
 
-    #156/442.5 纸张mm数比线条单位比值  33+10.5x换算成
     n=8
     line_height=(33+10.5*n)*442.5/156
-    line=doc.Shapes.AddLine(79, line_height, 521.5, line_height).line
+    line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,doc.Range(0,1)).line
     line.Weight=3
     line.ForeColor.RGB=255
+
+    add_content(selection,data["文件内容"])
+    add_name_date(selection,data["发文机关"][0],data["成文日期"])
+    add_end(doc,selection,data["抄送机关"],data["印发机关"],data["印发日期"])
+
+
+
+    #156/442.5 纸张mm数比线条单位比值  33+10.5x换算成
+
 
 
     #new_document.SaveAs("G:/python/win32com/3.docx")
@@ -195,9 +226,12 @@ def gen(data):
 if __name__ == '__main__':
 
     data={"份号":"234567","保密等级":"紧急","保密期限":"2年","紧急程度":"特急",
-          "发文机关":["泸溪县农业农村局"],
+          "发文机关":["XX县农业农村局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
-          "标题":"泸溪县农业农村局关于什么",
-          "文件内容":"局属各单位：\n根据。。。。。。。。。。",
-          "成文日期":"2020年6月12日"}
+          "标题":"XX县农业农村局关于什么",
+          "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "成文日期":"2020年6月12日",
+          "抄送机关":"XX县畜牧局",
+          "印发机关":"XX县农业农村局",
+          "印发日期":"2020年3月21日"}
     gen(data)
