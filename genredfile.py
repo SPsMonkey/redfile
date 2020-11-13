@@ -177,22 +177,16 @@ def add_end(d,s,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印�
     s.font.Name = '仿宋'
     # 字号设置为三号
     s.font.Size = 14
-    table=d.Tables.Add(s.Range,2,1)
-    table.LeftPadding=14
-    table.RightPadding = 14
-    # -3是底边-1 是顶边 -5是中间的水平边
-    topborder=table.Borders(-1)
-    topborder.LineStyle=1
-    topborder.LineWidth=4
-    bottomborder=table.Borders(-3)
-    bottomborder.LineStyle = 1
-    bottomborder.LineWidth = 4
-    midborder=table.Borders(-5)
-    midborder.LineStyle = 1
-    midborder.LineWidth = 2
-    s.TypeText("抄送："+chaoson)
-    s.MoveDown()
-    s.TypeText("印发机关："+yinfa+"印发日期："+date+"印发")
+    if chaoson=="":
+        s.Text="抄送："+chaoson+"\n印发机关："+yinfa+"印发日期："+date+"印发"
+        s.ParagraphFormat.CharacterUnitLeftIndent=1
+        s.ParagraphFormat.CharacterUnitRightIndent=1
+        n=s.Information(10)
+        add_line(d, s.Range, n-1, 1, 0)
+        add_line(d, s.Range, n, 0.5, 0)
+        add_line(d, s.Range, n+1, 1, 0)
+    else:
+        s.Text=yinfa+date+"印发"
 
 
 
