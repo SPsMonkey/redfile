@@ -1,8 +1,16 @@
 from win32com.client import Dispatch
+cm_to_points = 28.35  # 1厘米为28.35磅
+
+def add_line(doc,anchor,n,weight,color):
+    line_height=(33+10.5*n)*2.835 # 442.5/156
+    line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,anchor).line
+    line.Weight=weight
+    line.ForeColor.RGB=color
+
 
 def setPage(doc):#页面页面字号设置
     # 页面设置
-    cm_to_points = 28.35  # 1厘米为28.35磅
+
     # 国家公文格式标准要求是上边距版心3.7cm
     # 但是如果简单的把上边距设置为3.7cm
     # 则因为文本的第一行本身有行距
@@ -40,7 +48,7 @@ def setPage(doc):#页面页面字号设置
     # 每页22行，会自动设置行间距
 
     # 页码设置
-    doc.PageSetup.FooterDistance = 2.8 * cm_to_points
+    doc.PageSetup.FooterDistance = 2.4 * cm_to_points
     # 页码距下边缘2.8厘米
     doc.PageSetup.DifferentFirstPageHeaderFooter = 0
     # 首页页码相同
@@ -197,19 +205,12 @@ def gen(data):
     setPage(doc)
     selection = doc.Application.Selection
     addFileNum(selection, data["份号"])
-
     add_SecurityLevel_Time(selection, data["保密等级"],data["保密期限"])
     add_emergency_level(selection,data["紧急程度"])
     add_red_title(selection,data["发文机关"])
     add_redfile_num(selection,data["发文机关代字"],data["年份"],data["发文号"])
     add_title(selection,data["标题"])
-
-    n=8
-    line_height=(33+10.5*n)*442.5/156
-    line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,doc.Range(0,1)).line
-    line.Weight=3
-    line.ForeColor.RGB=255
-
+    add_line(doc, doc.Range(0,1), 8, 3, 255)
     add_content(selection,data["文件内容"])
     add_name_date(selection,data["发文机关"][0],data["成文日期"])
     add_end(doc,selection,data["抄送机关"],data["印发机关"],data["印发日期"])
