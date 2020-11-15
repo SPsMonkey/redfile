@@ -1,7 +1,8 @@
 from win32com.client import Dispatch
+import  math
 cm_to_points = 28.35  # 1厘米为28.35磅
 
-def add_line(doc,anchor,n,weight,color):
+def add_line(doc,anchor,n,weight,color): #在文档中添加横线
     line_height=(33+10.5*n)*2.835 # 442.5/156
     line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,anchor).line
     line.Weight=weight
@@ -116,9 +117,9 @@ def add_emergency_level(s,str):
     s.TypeText(str)
     s.TypeText("\n")
 
-def add_red_title(s,str):
+def add_red_title(doc,s,str):
     s.font.Name = '方正小标宋简体'
-    # 字号设置为三号
+    # 字号设置为小初号
     s.font.Size = 36
     s.font.color=255
     s.ParagraphFormat.Alignment=1#1是居中0 是靠左 2是靠右
@@ -126,6 +127,24 @@ def add_red_title(s,str):
         s.TypeText(str[0]+"文件")
         s.TypeText("\n")
     else:
+        table=doc.Tables.Add(s.Range,len(str),2)
+        cols=table.Columns
+        cols(1).Width=12*cm_to_points
+        cols(2).Width = 4 * cm_to_points
+
+        cell=table.Cell(1,2)
+        for i in range(0,len(str)-1):
+            cell.Merge(table.Cell(i+2,2))
+        cell.VerticalAlignment=1
+        for i in range(0,len(str)):
+            s.TypeText(str[i])
+            s.MoveDown()
+
+        cell.Select()
+        s.TypeText("文件")
+        s.MoveDown()
+
+
         pass
     s.font.Size = 16
     s.TypeText("\n\n")
@@ -145,7 +164,7 @@ def add_redfile_num(s,sybol,year,num):
 
 def add_title(s,str):
     s.font.Name = '方正小标宋简体'
-    # 字号设置为三号
+    # 字号设置为二号
     s.font.Size = 22
     s.font.color = 0
     s.ParagraphFormat.Alignment = 1
@@ -172,21 +191,53 @@ def add_name_date(s,name,date):
     s.TypeText(date)
     s.TypeText("\b\b\b\b\n")
 
-def add_end(d,s,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
+def add_end(d,s,zhuson,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
     s.ParagraphFormat.Alignment = 0
+    space=59-len(yinfa)*2-3*2-(len(date)-3)-2-4 #计算印发机关和印发日期中间需要多少空格
+
+    row_zhuson=math.ceil(len(zhuson)/27)#计算主送 需要的总行数，
+    row_chaoson=math.ceil(len(chaoson)/27)#计算抄送 需要的总行数
+    row_current = s.Information(10)#获取输入点所在的行数
+    row_adjust = 22-row_zhuson-row_chaoson - row_current
+    while row_adjust<0:#行数不够就加一页
+        row_adjust=row_adjust+22
+
+    s.TypeText("\n"*row_adjust)
+    row_current = s.Information(10)#获取输入点所在的行数
+
     s.font.Name = '仿宋'
     # 字号设置为三号
     s.font.Size = 14
-    if chaoson=="":
-        s.Text="抄送："+chaoson+"\n印发机关："+yinfa+"印发日期："+date+"印发"
-        s.ParagraphFormat.CharacterUnitLeftIndent=1
-        s.ParagraphFormat.CharacterUnitRightIndent=1
-        n=s.Information(10)
-        add_line(d, s.Range, n-1, 1, 0)
-        add_line(d, s.Range, n, 0.5, 0)
-        add_line(d, s.Range, n+1, 1, 0)
+    s.ParagraphFormat.Alignment=3 #使用两端对齐看起来更整齐
+    s.ParagraphFormat.CharacterUnitLeftIndent = 1
+    s.ParagraphFormat.CharacterUnitRightIndent = 1
+    s.ParagraphFormat.CharacterUnitFirstLineIndent = -3  # 悬挂3个字符
+    s.ParagraphFormat.HangingPunctuation = True
+    if zhuson!="":
+        s.Text=s.Text="主送："+zhuson
+        add_line(d, s.Range, row_current - 1, 1, 0)
+        s.MoveRight()
+        s.TypeText("\n")
+        if chaoson!="":
+            s.TypeText("抄送："+chaoson+"\n")
+        s.Text = yinfa + " " * space + date + "印发"
+        add_line(d, s.Range, row_current-1+row_zhuson+row_chaoson, 0.5, 0)
+        add_line(d, s.Range, row_current +row_zhuson+row_chaoson, 1, 0)
     else:
-        s.Text=yinfa+date+"印发"
+        if chaoson!="":
+            s.Text="抄送："+chaoson
+            add_line(d, s.Range, row_current - 1, 1, 0)
+            s.MoveRight()
+            s.TypeText("\n")
+            s.Text = yinfa + " " * space + date + "印发"
+            add_line(d, s.Range, row_current-1+row_chaoson, 0.5, 0)
+            add_line(d, s.Range, row_current + row_chaoson, 1, 0)
+        else:
+            s.Text = yinfa + " " * space + date + "印发"
+            add_line(d, s.Range, row_current - 1, 1, 0)
+            add_line(d, s.Range, row_current , 1, 0)
+
+
 
 
 
@@ -201,13 +252,14 @@ def gen(data):
     addFileNum(selection, data["份号"])
     add_SecurityLevel_Time(selection, data["保密等级"],data["保密期限"])
     add_emergency_level(selection,data["紧急程度"])
-    add_red_title(selection,data["发文机关"])
+    add_red_title(doc,selection,data["发文机关"])
     add_redfile_num(selection,data["发文机关代字"],data["年份"],data["发文号"])
-    add_title(selection,data["标题"])
-    add_line(doc, doc.Range(0,1), 8, 3, 255)
+    row_current = selection.Information(10)  # 获取输入点所在的行数
+    add_line(doc, doc.Range(0,1), row_current, 3, 255)
+    add_title(selection, data["标题"])
     add_content(selection,data["文件内容"])
     add_name_date(selection,data["发文机关"][0],data["成文日期"])
-    add_end(doc,selection,data["抄送机关"],data["印发机关"],data["印发日期"])
+    add_end(doc,selection,"",data["抄送机关"],data["印发机关"],data["印发日期"])
 
 
 
@@ -221,12 +273,13 @@ def gen(data):
 if __name__ == '__main__':
 
     data={"份号":"234567","保密等级":"紧急","保密期限":"2年","紧急程度":"特急",
-          "发文机关":["XX县农业农村局"],
+          "发文机关":["XX县农业农村局","县扶贫开发办","县劳动与保障局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"XX县农业农村局关于什么",
           "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
           "成文日期":"2020年6月12日",
-          "抄送机关":"XX县畜牧局",
-          "印发机关":"XX县农业农村局",
+          "主送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
+          "抄送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
+          "印发机关":"县农业农村局",
           "印发日期":"2020年3月21日"}
     gen(data)

@@ -26,6 +26,7 @@ class multiRow():
         line["lable"].grid(row=self.row_number, column=0, sticky=E)
         line["entry"] = Entry(master, width=28)
         line["entry"].grid(row=self.row_number, column=1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
+        line["entry"].bind("<Button-3>", lambda x: rightKey(x, line["entry"]))  # 绑定右键鼠标事件
         self.list.append(line)
         self.row_number = self.row_number + 1
 
@@ -43,6 +44,7 @@ class label():
         entry = Entry(master, width=8)
         entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
         self.entry=entry
+        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
 
     def get(self):
         return self.entry.get()
@@ -53,6 +55,7 @@ class longlabel(label):
         entry = Entry(master, width=38)
         entry.grid(row=rowNum, column=1, columnspan=5, padx=const.padx, pady=const.pady, sticky=W)
         self.entry = entry
+        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
 
 class date(label):
     def __init__(self, master, label_text, rowNum, clomNum):
@@ -60,6 +63,7 @@ class date(label):
         entry = Entry(master, width=18)
         entry.grid(row=rowNum, column=clomNum + 1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
         self.entry=entry
+        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
 
     def checkDate(self,date):#检测日期格式是否正确
         y=date.split("年",1)
@@ -115,14 +119,30 @@ class maintext():
         scrollbar.config(command=text.yview)
         box.pack(expand='yes', fill='x')
         self.text=text
+        text.bind("<Button-3>", lambda x: rightKey(x,text))  # 绑定右键鼠标事件
 
     def get(self):
         return self.text.get('0.0','end')
+menubar=0
+def cut(editor, event=None):
+    editor.event_generate("<<Cut>>")
+def copy(editor, event=None):
+    editor.event_generate("<<Copy>>")
+def paste(editor, event=None):
+    editor.event_generate('<<Paste>>')
+
+def rightKey(event, editor):
+    menubar.delete(0,END)
+    menubar.add_command(label='剪切',command=lambda:cut(editor))
+    menubar.add_command(label='复制',command=lambda:copy(editor))
+    menubar.add_command(label='粘贴',command=lambda:paste(editor))
+    menubar.post(event.x_root,event.y_root)
 
 class tab(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
-
+        global menubar
+        menubar = Menu(self, tearoff=False)  # 创建一个菜单
         body = Frame(self)
         self.allWigets={}
         self.FrameBody=body
