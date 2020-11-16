@@ -117,35 +117,58 @@ def add_emergency_level(s,str):
     s.TypeText(str)
     s.TypeText("\n")
 
-def add_red_title(doc,s,str):
+def add_red_title(doc,s,str): #添加大红头
     s.font.Name = '方正小标宋简体'
     # 字号设置为小初号
     s.font.Size = 36
     s.font.color=255
     s.ParagraphFormat.Alignment=1#1是居中0 是靠左 2是靠右
-    if len(str)==1:
-        s.TypeText(str[0]+"文件")
-        s.TypeText("\n")
-    else:
-        table=doc.Tables.Add(s.Range,len(str),2)
-        cols=table.Columns
-        cols(1).Width=12*cm_to_points
-        cols(2).Width = 4 * cm_to_points
+    maxwidth=15.6 #表格最大宽度 单位cm 初号字正常宽度1.3 如果超过12个字就需要压缩字宽度
 
-        cell=table.Cell(1,2)
+    maxlen=len(str[0])#找出字数最长的单位
+    for i in str:
+        if maxlen<len(i):
+            maxlen=len(i)
+    maxlen=maxlen+2
+
+    if len(str)==1: #单个单位行文
+        s.Text=str[0]+"文件"
+        if maxlen+2>12:
+            s.Font.Scaling=int(12*100/maxlen)
+        s.MoveRight()
+        s.TypeText("\n")
+        s.Font.Scaling=100
+
+    else:  #多个单位联合行文
+        table=doc.Tables.Add(s.Range,len(str),2)  #创建有2列多行的一个表格
+
+        cols=table.Columns
+        if maxlen>=12: #如果超过12个字符表格设置到最宽，列宽按比例分配
+            cols(1).Width=(15.6*(maxlen-2)/maxlen)*cm_to_points
+            cols(2).Width = (15.6*2/maxlen) * cm_to_points
+        else:
+            cols(1).Width = (15.6 * (maxlen-2) / 12) * cm_to_points
+            cols(2).Width = (15.6 * 2 / 12) * cm_to_points
+
+        cell=table.Cell(1,2) #将第二列合为一个单元格
         for i in range(0,len(str)-1):
             cell.Merge(table.Cell(i+2,2))
         cell.VerticalAlignment=1
-        for i in range(0,len(str)):
-            s.TypeText(str[i])
+
+        for i in range(0,len(str)): #第一列输入所有单位名称
+            s.Text = str[i]
+            if len(str[i])+2> 12:
+                s.Font.Scaling = int(12 * 100 / (len(str[i])+2))
+            s.MoveRight()
+            s.Font.Scaling = 100
             s.MoveDown()
 
         cell.Select()
-        s.TypeText("文件")
+        s.Text="文件"
+        if maxlen>=12:
+            s.Font.Scaling=int(12*100/maxlen)
         s.MoveDown()
 
-
-        pass
     s.font.Size = 16
     s.TypeText("\n\n")
 
@@ -273,7 +296,7 @@ def gen(data):
 if __name__ == '__main__':
 
     data={"份号":"234567","保密等级":"紧急","保密期限":"2年","紧急程度":"特急",
-          "发文机关":["XX县农业农村局","县扶贫开发办","县劳动与保障局"],
+          "发文机关":["中华人民共和国湖南省县湘潭市农业农村局","县扶贫开发办","县劳动与保障局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"XX县农业农村局关于什么",
           "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
