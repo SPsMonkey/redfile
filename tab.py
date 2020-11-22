@@ -18,6 +18,8 @@ class multiRow():
             texts.append(text)
         return texts
 
+    def set(self,data):
+
 
     def addline(self):
         master = self.FrameBody
@@ -149,7 +151,7 @@ class tab(Frame):
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
         self.allWigets["文件内容"] =maintext(self)
-        self.buttonbox()
+
 
 
     def body(self, master):
@@ -157,21 +159,6 @@ class tab(Frame):
         pass
 
 
-    def buttonbox(self):
-        # add standard button box. override if you don't want the
-        # standard buttons
-        box = Frame(self)
-        w = Button(box, text="点击生成", width=10, command=self.ok, default=ACTIVE)
-        w.pack(side=RIGHT, padx=5, pady=5)
-
-
-        self.bind("<Return>", self.ok)
-
-        box.pack()
-
-    def ok(self, event=None):
-
-        self.apply()
 
     def apply(self):
         pass # override

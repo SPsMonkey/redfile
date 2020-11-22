@@ -1,6 +1,8 @@
 import tkinter as tk
 from XiaXingWen import Xiaxinwen
 from tkinter import ttk
+from tkinter import filedialog
+import json
 
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
@@ -28,16 +30,35 @@ def set_win_center(root, curWidth='', curHight=''):
     root.geometry(size_xy)
 def hello():
     pass
+def open_peizhi():
+    filename=tk.filedialog.askopenfilename(title='加载配置',filetypes=[('red files','.redfile'), ('all files', '.*')])
+    if filename=="":
+        return
+    with open(filename) as file_obj:
+        f = json.load(file_obj)
+
+
+def save_peizhi():
+    filename=tk.filedialog.asksaveasfilename(title='保存配置', defaultextension=".redfile",
+                                    filetypes=[('red files', '.redfile'), ('all files', '.*')])
+    if filename=="":
+        return
+    Current_tab = tabview.tab(tabview.select(), "text")
+    data=tabs[Current_tab].getData()
+    with open(filename, 'w') as file_obj:
+        json.dump(data, file_obj, indent=2, ensure_ascii=False)
+
+def about():
+    pass
+
 def addMenu(root):
     menubar = tk.Menu(root)
 
     # create a pulldown menu, and add it to the menu bar
     filemenu = tk.Menu(menubar, tearoff=0)
-    filemenu.add_command(label="Open", command=hello)
-    filemenu.add_command(label="Save", command=hello)
-    filemenu.add_separator()
-    filemenu.add_command(label="Exit", command=root.quit)
-    menubar.add_cascade(label="File", menu=filemenu)
+    filemenu.add_command(label="加载配置", command=open_peizhi)
+    filemenu.add_command(label="保存配置", command=save_peizhi)
+    menubar.add_cascade(label="文件", menu=filemenu)
 
     # create more pulldown menus
     editmenu = tk.Menu(menubar, tearoff=0)
@@ -47,22 +68,35 @@ def addMenu(root):
     menubar.add_cascade(label="Edit", menu=editmenu)
 
     helpmenu = tk.Menu(menubar, tearoff=0)
-    helpmenu.add_command(label="About", command=hello)
-    menubar.add_cascade(label="Help", menu=helpmenu)
+    helpmenu.add_command(label="关于", command=hello)
+    menubar.add_cascade(label="帮助", menu=helpmenu)
 
     # display the menu
     root.config(menu=menubar)
 
+def ok(tabview):
+    Current_tab=tabview.tab(tabview.select(), "text")
+    tabs[Current_tab].apply()
+
+def buttonbox(root):
+    # add standard button box. override if you don't want the
+    # standard buttons
+    box = tk.Frame(root)
+    gen = tk.Button(box, text="点击生成", width=10, command=lambda: ok(tabview), default=tk.ACTIVE)
+    gen.pack(side=tk.RIGHT, padx=5, pady=5)
+    box.pack()
+
 if __name__ == '__main__':
     root = tk.Tk()
     addMenu(root)
+    tabs={}
     tabview=ttk.Notebook(root)
 
-
     tab3=Xiaxinwen(tabview)
+    tabs["下行文"]=tab3
     tabview.add(tab3,text="下行文")
-
-
     tabview.pack(expand = True, fill = tk.BOTH)
+
+    buttonbox(root)
     set_win_center(root, 500, 600)
     root.mainloop()
