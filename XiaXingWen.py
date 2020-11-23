@@ -35,6 +35,11 @@ class Xiaxinwen(tab):
             data[key]=xia[key].get()
         return data
 
+    def setData(self,data):
+        xia=self.allWigets
+        for key in data:
+            xia[key].set(data[key])
+
     def check(self,data):
         error=""
         if not data["份号"].isdigit():

@@ -35,8 +35,9 @@ def open_peizhi():
     if filename=="":
         return
     with open(filename) as file_obj:
-        f = json.load(file_obj)
-
+        data = json.load(file_obj)
+    Current_tab = tabview.tab(tabview.select(), "text")
+    tabs[Current_tab].setData(data)
 
 def save_peizhi():
     filename=tk.filedialog.asksaveasfilename(title='保存配置', defaultextension=".redfile",

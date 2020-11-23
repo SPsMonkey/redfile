@@ -54,37 +54,34 @@ class multiRow():
 
 class label():
     def __init__(self,master,label_text,rowNum,clomNum):
-        entry = Entry(master, width=8,textvariable=v)
+        entry = Entry(master, width=8)
         entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
-        self.entry=v
-        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+        self.init(entry, master, label_text, rowNum, clomNum)
 
-    def init(self,master,label_text,rowNum,clomNum):
+    def init(self,entry,master,label_text,rowNum,clomNum):
         Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         v=StringVar()
-        entry = Entry(master, width=8,textvariable=v)
-        entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
+        entry.config(textvariable=v)
         self.entry=v
         entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
 
     def get(self):
         return self.entry.get()
+    def set(self,data):
+        self.entry.set(data)
+
 
 class longlabel(label):
     def __init__(self, master, label_text, rowNum, clomNum):
-        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         entry = Entry(master, width=38)
         entry.grid(row=rowNum, column=1, columnspan=5, padx=const.padx, pady=const.pady, sticky=W)
-        self.entry = entry
-        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+        self.init(entry, master, label_text, rowNum, clomNum)
 
 class date(label):
     def __init__(self, master, label_text, rowNum, clomNum):
-        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         entry = Entry(master, width=18)
-        entry.grid(row=rowNum, column=clomNum + 1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
-        self.entry=entry
-        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+        entry.grid(row=rowNum, column=1, columnspan=2, padx=const.padx, pady=const.pady, sticky=W)
+        self.init(entry, master, label_text, rowNum, clomNum)
 
     def checkDate(self,date):#检测日期格式是否正确
         y=date.split("年",1)
@@ -118,16 +115,27 @@ class date(label):
 class option():
     def __init__(self, master, label_text, rowNum, clomNum,values):
         Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
-        number = StringVar()
-        numberChosen = ttk.Combobox(master, width=5, textvariable=number, state="readonly")
-        numberChosen['values'] = values  # 设置下拉列表的值
-        numberChosen.grid(column=clomNum + 1, row=rowNum, padx=const.padx, pady=const.pady,
+        chosenString = StringVar()
+        cobobox = ttk.Combobox(master, width=5, textvariable=chosenString, state="readonly")
+        cobobox['values'] = values  # 设置下拉列表的值
+        cobobox.grid(column=clomNum + 1, row=rowNum, padx=const.padx, pady=const.pady,
                           sticky=W)  # 设置其在界面中出现的位置  column代表列   row 代表行
-        numberChosen.current(0)  # 设置下拉列表默认显示的值，0为 numberChosen['values'] 的下标值
-        self.str=number
+        cobobox.current(0)  # 设置下拉列表默认显示的值，0为 numberChosen['values'] 的下标值
+        self.str=chosenString
+        self.combox=cobobox
+
 
     def get(self):
         return self.str.get()
+
+    def set(self,data):
+        combox=self.combox["values"]
+        for i in range(0,len(combox)):
+            if data==combox[i]:
+                self.combox.current(i)
+                break
+
+
 
 class maintext():
     def __init__(self, parent):
@@ -144,6 +152,10 @@ class maintext():
 
     def get(self):
         return self.text.get('0.0','end')
+    def set(self,data):
+        self.text.delete('1.0', 'end')
+        self.text.insert('1.0',data)
+
 menubar=0
 def cut(editor, event=None):
     editor.event_generate("<<Cut>>")
