@@ -19,6 +19,16 @@ class multiRow():
         return texts
 
     def set(self,data):
+        n= len(data)-len(self.list)
+        if n>0:
+            for i in range(0,n):
+                self.addline()
+        elif n<0:
+            for i in range(0,-n):
+                self.deleterow()
+        for i in range(len(data)):
+            self.list[i]["text"].set(data[i])
+
 
 
     def addline(self):
@@ -26,7 +36,9 @@ class multiRow():
         line={}
         line["lable"]=Label(master, text="*发文机关：")
         line["lable"].grid(row=self.row_number, column=0, sticky=E)
-        line["entry"] = Entry(master, width=28)
+        v = StringVar()
+        line["text"]=v
+        line["entry"] = Entry(master, width=28,textvariable=v)
         line["entry"].grid(row=self.row_number, column=1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
         line["entry"].bind("<Button-3>", lambda x: rightKey(x, line["entry"]))  # 绑定右键鼠标事件
         self.list.append(line)
@@ -42,10 +54,17 @@ class multiRow():
 
 class label():
     def __init__(self,master,label_text,rowNum,clomNum):
-        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
-        entry = Entry(master, width=8)
+        entry = Entry(master, width=8,textvariable=v)
         entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
-        self.entry=entry
+        self.entry=v
+        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+
+    def init(self,master,label_text,rowNum,clomNum):
+        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
+        v=StringVar()
+        entry = Entry(master, width=8,textvariable=v)
+        entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
+        self.entry=v
         entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
 
     def get(self):
