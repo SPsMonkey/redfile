@@ -36,46 +36,76 @@ class ji_guan_dai_zi(label):
     def check(self):
         if self.get()=="":
             return "发文机关代字不能为空。"
+        else:
+            return ""
 
 class nian_fen(label):
     def __init__(self, master, rowNum, clomNum):
         label.__init__(self, master, "年份：", rowNum, clomNum)
     def check(self):
-        pass
+        s=self.get()
+        if s == "":
+            return "年份不能为空。"
+        elif (not s.isdigit()) or (len(s)!=4):
+            return "年份必须为4位阿拉伯数字。"
+        else:
+            return ""
+
 class fa_wen_hao(label):
     def __init__(self, master, rowNum, clomNum):
         label.__init__(self, master, "发文号：", rowNum, clomNum)
     def check(self):
-        pass
+        s = self.get()
+        if s == "":
+            return "发文号不能为空。"
+        elif not s.isdigit():
+            return "发文号必须为阿拉伯数字。"
+        else:
+            return ""
 
 class biao_ti(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "标题：", rowNum, clomNum)
     def check(self):
-        pass
+        s = self.get()
+        if s == "":
+            return "标题不能为空。"
+        else:
+            return ""
 
 class cheng_wen_ri_qi(date):
     def __init__(self, master, rowNum, clomNum):
         date.__init__(self, master, "成文日期：", rowNum, clomNum)
     def check(self):
-        pass
+        s = self.get()
+        if s == "":
+            return "成文日期不能为空。"
+        elif not self.checkDate():
+            return "请输入正确格式的成文日期"
+        else:
+            return ""
 class yin_fa_ri_qi(date):
     def __init__(self, master, rowNum, clomNum):
         date.__init__(self, master, "印发日期：", rowNum, clomNum)
     def check(self):
-        pass
+        s=self.get()
+        if s != "":
+            if not self.checkDate():
+                return "请输入正确格式的成文日期"
+        else:
+            return ""
 
 class chao_song(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "抄送机关：", rowNum, clomNum)
     def check(self):
-        pass
+        return ""
 
 class yin_fa(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "印发机关：", rowNum, clomNum)
     def check(self):
-        pass
+        return ""
 
 class tab(Frame):
     def __init__(self, parent):

@@ -82,7 +82,8 @@ class date(label):
         entry.grid(row=rowNum, column=1, columnspan=2, padx=const.padx, pady=const.pady, sticky=W)
         self.init(entry, master, label_text, rowNum, clomNum)
 
-    def checkDate(self,date):#检测日期格式是否正确
+    def checkDate(self):#检测日期格式是否正确
+        date=self.get()
         y=date.split("年",1)
         if len(y[0])!=4:
             return False
@@ -154,6 +155,11 @@ class maintext():
     def set(self,data):
         self.text.delete('1.0', 'end')
         self.text.insert('1.0',data)
+    def check(self):
+        if self.get()=="\n":
+            return "文件内容不能为空."
+        else:
+            return ""
 
 menubar=0
 def cut(editor, event=None):
