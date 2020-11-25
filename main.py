@@ -3,7 +3,7 @@ from XiaXingWen import Xiaxinwen
 from tkinter import ttk
 from tkinter import filedialog
 import json
-
+import redfileWigets
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
     #:param root:主窗体实例
@@ -74,6 +74,8 @@ def addMenu(root):
 
     # display the menu
     root.config(menu=menubar)
+
+    redfileWigets.menubar = tk.Menu(root, tearoff=False)  # 添加右键菜单
 
 def ok(tabview):
     Current_tab=tabview.tab(tabview.select(), "text")

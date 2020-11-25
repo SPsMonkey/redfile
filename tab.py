@@ -1,181 +1,85 @@
 from tkinter import  *
+from redfileWigets import *
 from tkinter import ttk
 import const
+class fen_hao(label): #份号
+    def __init__(self,master,rowNum,clomNum):
+        label.__init__(self,master,"份号：",rowNum,clomNum)
 
-class multiRow():
-    def __init__(self,master,rownum):
-        self.FrameBody=master
-        self.row_number=rownum
-        self.list=[]
-        self.addline()
-        Button(master, text="增加", command=self.addline).grid(row=rownum, column=4, sticky=E, padx=3, pady=3)
-        Button(master, text="减少", command=self.deleterow).grid(row=rownum, column=5, sticky=W, padx=3, pady=3)
+    def check(self):
+        s=self.get()
+        if not s.isdigit():
+            return "份号必须是数字。"
+        else:
+            return ""
 
-    def get(self):
-        texts=[]
-        for i in self.list:
-            text=i["entry"].get()
-            texts.append(text)
-        return texts
+class bao_mi_deng_ji(option):
+    def __init__(self, master, rowNum, clomNum):
+        option.__init__(self, master, "保密等级：", rowNum, clomNum,("无", "绝密","机密","秘密" ))
+    def check(self):
+        return ""
 
-    def set(self,data):
-        n= len(data)-len(self.list)
-        if n>0:
-            for i in range(0,n):
-                self.addline()
-        elif n<0:
-            for i in range(0,-n):
-                self.deleterow()
-        for i in range(len(data)):
-            self.list[i]["text"].set(data[i])
+class bao_mi_qi_xian(label):
+    def __init__(self, master, rowNum, clomNum):
+        label.__init__(self, master, "保密期限：", rowNum, clomNum)
+    def check(self):
+        return ""
+class jin_ji_cheng_du(option):
+    def __init__(self, master, rowNum, clomNum):
+        option.__init__(self, master, "紧急程度：", rowNum, clomNum,("无", "特急","加急","特提","平急" ))
+    def check(self):
+        return ""
 
+class ji_guan_dai_zi(label):
+    def __init__(self, master, rowNum, clomNum):
+        label.__init__(self, master, "发文机关代字：", rowNum, clomNum)
+    def check(self):
+        if self.get()=="":
+            return "发文机关代字不能为空。"
 
-
-    def addline(self):
-        master = self.FrameBody
-        line={}
-        line["lable"]=Label(master, text="*发文机关：")
-        line["lable"].grid(row=self.row_number, column=0, sticky=E)
-        v = StringVar()
-        line["text"]=v
-        line["entry"] = Entry(master, width=28,textvariable=v)
-        line["entry"].grid(row=self.row_number, column=1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
-        line["entry"].bind("<Button-3>", lambda x: rightKey(x, line["entry"]))  # 绑定右键鼠标事件
-        self.list.append(line)
-        self.row_number = self.row_number + 1
-
-    def deleterow(self):
-        if len(self.list)>1:
-            line=self.list.pop()
-            line["lable"].destroy()
-            line["entry"].destroy()
-            self.row_number = self.row_number - 1
+class nian_fen(label):
+    def __init__(self, master, rowNum, clomNum):
+        label.__init__(self, master, "年份：", rowNum, clomNum)
+    def check(self):
+        pass
+class fa_wen_hao(label):
+    def __init__(self, master, rowNum, clomNum):
+        label.__init__(self, master, "发文号：", rowNum, clomNum)
+    def check(self):
         pass
 
-class label():
-    def __init__(self,master,label_text,rowNum,clomNum):
-        entry = Entry(master, width=8)
-        entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
-        self.init(entry, master, label_text, rowNum, clomNum)
+class biao_ti(longlabel):
+    def __init__(self, master, rowNum, clomNum):
+        longlabel.__init__(self, master, "标题：", rowNum, clomNum)
+    def check(self):
+        pass
 
-    def init(self,entry,master,label_text,rowNum,clomNum):
-        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
-        v=StringVar()
-        entry.config(textvariable=v)
-        self.entry=v
-        entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+class cheng_wen_ri_qi(date):
+    def __init__(self, master, rowNum, clomNum):
+        date.__init__(self, master, "成文日期：", rowNum, clomNum)
+    def check(self):
+        pass
+class yin_fa_ri_qi(date):
+    def __init__(self, master, rowNum, clomNum):
+        date.__init__(self, master, "印发日期：", rowNum, clomNum)
+    def check(self):
+        pass
 
-    def get(self):
-        return self.entry.get()
-    def set(self,data):
-        self.entry.set(data)
+class chao_song(longlabel):
+    def __init__(self, master, rowNum, clomNum):
+        longlabel.__init__(self, master, "抄送机关：", rowNum, clomNum)
+    def check(self):
+        pass
 
-
-class longlabel(label):
-    def __init__(self, master, label_text, rowNum, clomNum):
-        entry = Entry(master, width=38)
-        entry.grid(row=rowNum, column=1, columnspan=5, padx=const.padx, pady=const.pady, sticky=W)
-        self.init(entry, master, label_text, rowNum, clomNum)
-
-class date(label):
-    def __init__(self, master, label_text, rowNum, clomNum):
-        entry = Entry(master, width=18)
-        entry.grid(row=rowNum, column=1, columnspan=2, padx=const.padx, pady=const.pady, sticky=W)
-        self.init(entry, master, label_text, rowNum, clomNum)
-
-    def checkDate(self,date):#检测日期格式是否正确
-        y=date.split("年",1)
-        if len(y[0])!=4:
-            return False
-        if not y[0].isdigit():
-            return False
-
-        m=y[1].split("月",1)
-        if len(m[0])>2 or len(m[0])<1:
-            return False
-        if not m[0].isdigit():
-            return False
-        M=int(m[0])
-        if M>12 or M<1:
-            return False
-
-        d=m[1].split("日",1)
-        if len(d[0]) > 2 or len(d[0]) < 1:
-            return False
-        if not d[0].isdigit():
-            return False
-        M = int(d[0])
-        if M > 31 or M < 1:
-            return False
-
-        if d[1]!="":
-            return False
-        return True
-
-class option():
-    def __init__(self, master, label_text, rowNum, clomNum,values):
-        Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
-        chosenString = StringVar()
-        cobobox = ttk.Combobox(master, width=5, textvariable=chosenString, state="readonly")
-        cobobox['values'] = values  # 设置下拉列表的值
-        cobobox.grid(column=clomNum + 1, row=rowNum, padx=const.padx, pady=const.pady,
-                          sticky=W)  # 设置其在界面中出现的位置  column代表列   row 代表行
-        cobobox.current(0)  # 设置下拉列表默认显示的值，0为 numberChosen['values'] 的下标值
-        self.str=chosenString
-        self.combox=cobobox
-
-
-    def get(self):
-        return self.str.get()
-
-    def set(self,data):
-        combox=self.combox["values"]
-        for i in range(0,len(combox)):
-            if data==combox[i]:
-                self.combox.current(i)
-                break
-
-
-
-class maintext():
-    def __init__(self, parent):
-        Label(parent, text="*文件内容:").pack(side='top', anchor='sw')
-        box=Frame(parent)
-        scrollbar = Scrollbar(box)
-        scrollbar.pack(side=RIGHT, fill=Y)
-        text=Text(box,width=30,height=10,yscrollcommand=scrollbar.set)
-        text.pack( expand='yes', fill='x',padx=5,pady=5)
-        scrollbar.config(command=text.yview)
-        box.pack(expand='yes', fill='x')
-        self.text=text
-        text.bind("<Button-3>", lambda x: rightKey(x,text))  # 绑定右键鼠标事件
-
-    def get(self):
-        return self.text.get('0.0','end')
-    def set(self,data):
-        self.text.delete('1.0', 'end')
-        self.text.insert('1.0',data)
-
-menubar=0
-def cut(editor, event=None):
-    editor.event_generate("<<Cut>>")
-def copy(editor, event=None):
-    editor.event_generate("<<Copy>>")
-def paste(editor, event=None):
-    editor.event_generate('<<Paste>>')
-
-def rightKey(event, editor):
-    menubar.delete(0,END)
-    menubar.add_command(label='剪切',command=lambda:cut(editor))
-    menubar.add_command(label='复制',command=lambda:copy(editor))
-    menubar.add_command(label='粘贴',command=lambda:paste(editor))
-    menubar.post(event.x_root,event.y_root)
+class yin_fa(longlabel):
+    def __init__(self, master, rowNum, clomNum):
+        longlabel.__init__(self, master, "印发机关：", rowNum, clomNum)
+    def check(self):
+        pass
 
 class tab(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
-        global menubar
-        menubar = Menu(self, tearoff=False)  # 创建一个菜单
         body = Frame(self)
         self.allWigets={}
         self.FrameBody=body
@@ -198,8 +102,6 @@ class tab(Frame):
 
 
 if __name__ == '__main__':
-
-
     root = Tk()
     tab=tab(root)
     tab.pack(expand='yes', fill='x')
