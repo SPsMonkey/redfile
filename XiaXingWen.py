@@ -45,7 +45,9 @@ class Xiaxinwen(tab):
         error=""
         xia = self.allWigets
         for key in xia:
-            xia[key]
+            e=xia[key].check()
+            if e!="":
+                error=error+e+"\n"
         return error
 
 

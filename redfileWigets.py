@@ -28,8 +28,11 @@ class multiRow():
                 self.deleterow()
         for i in range(len(data)):
             self.list[i]["text"].set(data[i])
-
-
+    def check(self):
+        if self.get()[0]=="":
+            return  "发文机关不能为空。"
+        else:
+            return ""
 
     def addline(self):
         master = self.FrameBody
