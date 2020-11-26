@@ -142,11 +142,11 @@ class option():
 
 class maintext():
     def __init__(self, parent):
-        Label(parent, text="*文件内容:").pack(side='top', anchor='sw')
+        Label(parent, text="*文件内容:").pack(side='top', anchor='w')
         box=Frame(parent)
         scrollbar = Scrollbar(box)
         scrollbar.pack(side=RIGHT, fill=Y)
-        text=Text(box,width=30,height=10,yscrollcommand=scrollbar.set)
+        text=Text(box,width=55,height=15,yscrollcommand=scrollbar.set)
         text.pack( expand='yes', fill='x',padx=5,pady=5)
         scrollbar.config(command=text.yview)
         box.pack(expand='yes', fill='x')

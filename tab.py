@@ -115,18 +115,44 @@ class tab(Frame):
         self.FrameBody=body
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
-        self.allWigets["文件内容"] =maintext(self)
 
+        show_hide = Button(self, text="显示其他选项", command=lambda: self.show_other(), default=ACTIVE)
+        show_hide.pack(padx=5, pady=5,anchor='e')
+        self.hide_button=show_hide
 
+        other_body=Frame(self)
+        self.other_body=other_body
+        self.other(other_body)
+        self.is_hide=True
+
+        self.main_text_body=Frame(self)
+        self.allWigets["文件内容"] =maintext(self.main_text_body)
+        self.main_text_body.pack()
 
     def body(self, master):
 
         pass
 
-
+    def other(self,master):
+        pass
 
     def apply(self):
         pass # override
+
+    def show_other(self):
+        if self.is_hide==True:
+            self.main_text_body.forget()
+            self.other_body.pack()
+            self.main_text_body.pack()
+            self.hide_button["text"]="隐藏其他选项"
+            self.is_hide=False
+        else:
+            self.other_body.forget()
+            self.hide_button["text"] = "显示其他选项"
+            self.is_hide=True
+
+    def hide_other(self):
+        pass
 
 
 

@@ -101,5 +101,5 @@ if __name__ == '__main__':
     tabview.pack(expand = True, fill = tk.BOTH)
 
     buttonbox(root)
-    set_win_center(root, 500, 600)
+    #set_win_center(root, 450, 600)
     root.mainloop()
