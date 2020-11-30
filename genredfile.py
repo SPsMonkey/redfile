@@ -102,19 +102,25 @@ def addFileNum(s,str):#份号
     s.TypeText("\n")
 
 def add_SecurityLevel_Time(s,level,time):#保密等级及保密期限
-    s.font.Name = '黑体'
-    # 字号设置为三号
-    s.font.Size = 16
-    s.TypeText(level)
-    s.InsertSymbol(Font = "黑体", CharacterNumber = 9733, Unicode = True)
-    s.TypeText(time)
+    if level=="无":
+        pass
+    else:
+        s.font.Name = '黑体'
+        # 字号设置为三号
+        s.font.Size = 16
+        s.TypeText(level)
+        s.InsertSymbol(Font = "黑体", CharacterNumber = 9733, Unicode = True)
+        s.TypeText(time)
     s.TypeText("\n")
 
 def add_emergency_level(s,str):
-    s.font.Name = '黑体'
-    # 字号设置为三号
-    s.font.Size = 16
-    s.TypeText(str)
+    if str=="无":
+        pass
+    else:
+        s.font.Name = '黑体'
+        # 字号设置为三号
+        s.font.Size = 16
+        s.TypeText(str)
     s.TypeText("\n")
 
 def add_red_title(doc,s,str): #添加大红头
@@ -141,14 +147,14 @@ def add_red_title(doc,s,str): #添加大红头
 
     else:  #多个单位联合行文
         table=doc.Tables.Add(s.Range,len(str),2)  #创建有2列多行的一个表格
-
+        table.Range.Rows.Alignment=1
         cols=table.Columns
         if maxlen>=12: #如果超过12个字符表格设置到最宽，列宽按比例分配
-            cols(1).Width=(15.6*(maxlen-2)/maxlen)*cm_to_points
-            cols(2).Width = (15.6*2/maxlen) * cm_to_points
+            cols(1).Width=(14.84*(maxlen-2)/maxlen+0.38)*cm_to_points
+            cols(2).Width = (14.84*2/maxlen+0.38) * cm_to_points
         else:
-            cols(1).Width = (15.6 * (maxlen-2) / 12) * cm_to_points
-            cols(2).Width = (15.6 * 2 / 12) * cm_to_points
+            cols(1).Width = (15.6 * (maxlen-2) / 12+0.38) * cm_to_points  #因为word生成的表格有个默认的左右边距0.19cm，所以需要加上0.38
+            cols(2).Width = (15.6 * 2 / 12+0.38) * cm_to_points
 
         cell=table.Cell(1,2) #将第二列合为一个单元格
         for i in range(0,len(str)-1):
@@ -157,8 +163,9 @@ def add_red_title(doc,s,str): #添加大红头
 
         for i in range(0,len(str)): #第一列输入所有单位名称
             s.Text = str[i]
-            if len(str[i])+2> 12:
-                s.Font.Scaling = int(12 * 100 / (len(str[i])+2))
+            if len(str[i])+2>=12:#字数超过10个则需要把字压扁
+                s.Font.Scaling = int(11.8 * 100 / (len(str[i])+2))
+            s.ParagraphFormat.Alignment = 4 #分散对齐
             s.MoveRight()
             s.Font.Scaling = 100
             s.MoveDown()
@@ -166,7 +173,7 @@ def add_red_title(doc,s,str): #添加大红头
         cell.Select()
         s.Text="文件"
         if maxlen>=12:
-            s.Font.Scaling=int(12*100/maxlen)
+            s.Font.Scaling=int(11.8*100/maxlen)
         s.MoveDown()
 
     s.font.Size = 16
@@ -296,7 +303,7 @@ def gen(data):
 if __name__ == '__main__':
 
     data={"份号":"234567","保密等级":"紧急","保密期限":"2年","紧急程度":"特急",
-          "发文机关":["湖南湘潭市农业农村局","县扶贫开发办","县劳动与保障局"],
+          "发文机关":["湖南省娄底市湘潭农业农村局","县扶贫开发办","县劳动与保障局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"XX县农业农村局关于什么",
           "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
