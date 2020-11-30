@@ -3,10 +3,11 @@ from tkinter import ttk
 import const
 
 class multiRow():
-    def __init__(self,master,rownum):
+    def __init__(self,master,rownum,text):
         self.FrameBody=master
         self.row_number=rownum
         self.list=[]
+        self.text=text
         self.addline()
         Button(master, text="增加", command=self.addline).grid(row=rownum, column=4, sticky=E, padx=3, pady=3)
         Button(master, text="减少", command=self.deleterow).grid(row=rownum, column=5, sticky=W, padx=3, pady=3)
@@ -28,16 +29,12 @@ class multiRow():
                 self.deleterow()
         for i in range(len(data)):
             self.list[i]["text"].set(data[i])
-    def check(self):
-        if self.get()[0]=="":
-            return  "发文机关不能为空。"
-        else:
-            return ""
+
 
     def addline(self):
         master = self.FrameBody
         line={}
-        line["lable"]=Label(master, text="*发文机关：")
+        line["lable"]=Label(master, text=self.text)
         line["lable"].grid(row=self.row_number, column=0, sticky=E)
         v = StringVar()
         line["text"]=v

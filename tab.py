@@ -29,6 +29,15 @@ class jin_ji_cheng_du(option):
         option.__init__(self, master, "紧急程度：", rowNum, clomNum,("无", "特急","加急","特提","平急" ))
     def check(self):
         return ""
+class fa_wen_ji_guan(multiRow):
+    def __init__(self,master,rownum):
+        multiRow.__init__(self,master,rownum,"发文机关：")
+
+    def check(self):
+        if self.get()[0]=="":
+            return  "发文机关不能为空。"
+        else:
+            return ""
 
 class ji_guan_dai_zi(label):
     def __init__(self, master, rowNum, clomNum):
@@ -84,6 +93,15 @@ class cheng_wen_ri_qi(date):
             return "请输入正确格式的成文日期"
         else:
             return ""
+
+class fu_jian(multiRow):
+    def __init__(self,master,rownum):
+        multiRow.__init__(self,master,rownum,"附件：")
+
+    def check(self):
+        return ""
+
+
 class yin_fa_ri_qi(date):
     def __init__(self, master, rowNum, clomNum):
         date.__init__(self, master, "印发日期：", rowNum, clomNum)
@@ -106,6 +124,8 @@ class yin_fa(longlabel):
         longlabel.__init__(self, master, "印发机关：", rowNum, clomNum)
     def check(self):
         return ""
+
+
 
 class tab(Frame):
     def __init__(self, parent):

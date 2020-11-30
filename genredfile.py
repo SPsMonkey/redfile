@@ -215,11 +215,26 @@ def add_name_date(s,name,date):
     s.font.Size = 16
     s.font.color = 0
     s.TypeText("\n\n\n")
-    s.ParagraphFormat.Alignment = 2
-    s.TypeText(name)
-    s.TypeText("\b\b\b\b\n")
-    s.TypeText(date)
-    s.TypeText("\b\b\b\b\n")
+    s.ParagraphFormat.Alignment = 2  #段落右对齐
+    s.ParagraphFormat.WordWrap = False  #让行末的空格显示出来
+    if len(name)==1:
+        s.ParagraphFormat.Alignment = 2
+        s.TypeText(name[0])
+        s.TypeText(2*chr(12288))
+        s.TypeText(date)
+        s.TypeText(2*chr(12288))
+    else:
+
+        for text in name:
+            n_col = s.Information(9)  # 获取输入点所在列数
+            if n_col + len(text) + 4 > 28:
+                s.TypeText("\n\n\n")
+            s.TypeText(2*chr(12288))#输入2个全角空格
+            s.TypeText(text)
+            s.TypeText(2*chr(12288))
+        n_col = s.Information(9)  # 获取输入点所在列数
+        s.TypeText("\n"+date+"    \n")
+
 
 def add_end(d,s,zhuson,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
     s.ParagraphFormat.Alignment = 0
@@ -288,7 +303,7 @@ def gen(data):
     add_line(doc, doc.Range(0,1), row_current, 3, 255)
     add_title(selection, data["标题"])
     add_content(selection,data["文件内容"])
-    add_name_date(selection,data["发文机关"][0],data["成文日期"])
+    add_name_date(selection,data["发文机关"],data["成文日期"])
     add_end(doc,selection,"",data["抄送机关"],data["印发机关"],data["印发日期"])
 
 
@@ -306,7 +321,7 @@ if __name__ == '__main__':
           "发文机关":["湖南省娄底市湘潭农业农村局","县扶贫开发办","县劳动与保障局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"XX县农业农村局关于什么",
-          "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+          "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n",
           "成文日期":"2020年6月12日",
           "主送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
           "抄送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",

@@ -13,7 +13,7 @@ class Xiaxinwen(tab):
         xia["年份"]=nian_fen(master,0,2)
         xia["发文号"]=fa_wen_hao(master,0, 4)
         #
-        xia["发文机关"]=multiRow(master,1)
+        xia["发文机关"]=fa_wen_ji_guan(master,1)
         xia["标题"]=biao_ti(master,50,0)
         xia["成文日期"]=cheng_wen_ri_qi(master, 51,0)
 
@@ -25,9 +25,11 @@ class Xiaxinwen(tab):
         xia["保密期限"] = bao_mi_qi_xian(master, 1, 2)
         xia["紧急程度"] = jin_ji_cheng_du(master, 0, 2)
 
-        xia["抄送机关"] = chao_song(master, 2, 0)
-        xia["印发机关"] = yin_fa(master, 3, 0)
-        xia["印发日期"] = yin_fa_ri_qi(master, 4, 0)
+        xia["附件"]=fu_jian(master,2)
+
+        xia["抄送机关"] = chao_song(master, 30, 0)
+        xia["印发机关"] = yin_fa(master, 31, 0)
+        xia["印发日期"] = yin_fa_ri_qi(master, 32, 0)
 
     def getData(self):
         xia=self.allWigets
