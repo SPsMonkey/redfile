@@ -208,6 +208,26 @@ def add_content(s,str):
     s.font.color = 0
     s.ParagraphFormat.Alignment = 0
     s.TypeText(str)
+    s.TypeText("\n")
+
+def add_fujian_shuo_min(s,data):
+    if len(data)==0:
+        return
+    else:
+        s.TypeText("\n")
+        s.TypeText(2 * chr(12288))  # 输入2个全角空格
+        s.TypeText("附件：")
+        if len(data)==1:
+            s.ParagraphFormat.CharacterUnitFirstLineIndent = -5  # 悬挂5个字符
+            s.ParagraphFormat.HangingPunctuation = True
+            s.TypeText(data[0])
+        else:
+            s.ParagraphFormat.CharacterUnitFirstLineIndent = -6  # 悬挂3个字符
+            s.ParagraphFormat.HangingPunctuation = True
+            for i in range(1,len(data)+1):
+                s.TypeText(str(i)+"."+data[i-1]+"\n"+5 * chr(12288))
+        s.ParagraphFormat.CharacterUnitFirstLineIndent = 0  # 恢复正常段落格式
+        s.ParagraphFormat.HangingPunctuation = False
 
 def add_name_date(s,name,date):
     s.font.Name = '仿宋'
@@ -235,6 +255,31 @@ def add_name_date(s,name,date):
         n_col = s.Information(9)  # 获取输入点所在列数
         s.TypeText("\n"+date+"    \n")
 
+def add_fujian(s,data):
+    if len(data)==0:
+        return
+    else:
+        for i in range(1,len(data)+1):
+            s.InsertBreak(2)  # 插入分页符
+            s.font.Name = '黑体'
+            s.font.Size = 16
+            s.ParagraphFormat.Alignment = 0
+            if len(data)>1:
+                s.TypeText("附件" +str(i)+ "\n\n")
+            else:
+                s.TypeText("附件" + "\n\n")
+            s.font.Name = '方正小标宋简体'
+            s.font.Size = 22
+            s.ParagraphFormat.Alignment = 1
+            s.TypeText(data[i-1] + "\n")
+            s.font.Name = '仿宋'
+            s.font.Size = 16
+            s.ParagraphFormat.Alignment = 0
+            if len(data)>1:
+                s.TypeText("\n"+2 * chr(12288) + "在此粘贴附件"+str(i)+"内容")
+            else:
+                s.TypeText("\n"+2 * chr(12288) + "在此粘贴附件内容")
+        s.TypeText("\n")
 
 def add_end(d,s,zhuson,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
     s.ParagraphFormat.Alignment = 0
@@ -303,7 +348,9 @@ def gen(data):
     add_line(doc, doc.Range(0,1), row_current, 3, 255)
     add_title(selection, data["标题"])
     add_content(selection,data["文件内容"])
+    add_fujian_shuo_min(selection,data["附件"])
     add_name_date(selection,data["发文机关"],data["成文日期"])
+    add_fujian(selection,data["附件"])
     add_end(doc,selection,"",data["抄送机关"],data["印发机关"],data["印发日期"])
 
 
@@ -321,8 +368,9 @@ if __name__ == '__main__':
           "发文机关":["湖南省娄底市湘潭农业农村局","县扶贫开发办","县劳动与保障局"],
           "发文机关代字":"泸农发","年份":"2019","发文号":"6",
           "标题":"XX县农业农村局关于什么",
-          "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n",
+          "文件内容":"局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n结束",
           "成文日期":"2020年6月12日",
+          "附件":["湖北省武汉市事发地点发送到发送到杀对方水电费第三方第三方第三方士大夫地方","湖北省武汉市事发地点发送到发送到杀对方水电费第三方第三方第三方士大夫地方"],
           "主送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
           "抄送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
           "印发机关":"县农业农村局",
