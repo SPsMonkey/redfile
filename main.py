@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import filedialog
 import json
 import redfileWigets
+import about_dialog
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
     #:param root:主窗体实例
@@ -50,7 +51,7 @@ def save_peizhi():
         json.dump(data, file_obj, indent=2, ensure_ascii=False)
 
 def about():
-    pass
+    about_dialog.MyDialog(root)
 
 def addMenu(root):
     menubar = tk.Menu(root)
@@ -69,7 +70,7 @@ def addMenu(root):
     menubar.add_cascade(label="Edit", menu=editmenu)
 
     helpmenu = tk.Menu(menubar, tearoff=0)
-    helpmenu.add_command(label="关于", command=hello)
+    helpmenu.add_command(label="关于", command=about)
     menubar.add_cascade(label="帮助", menu=helpmenu)
 
     # display the menu

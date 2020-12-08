@@ -1,8 +1,19 @@
 from tkinter import  *
 from tkinter import ttk
 import const
+class baseWiget():
 
-class multiRow():
+    def get(self):
+        pass
+    def set(self):
+        pass
+    def check2(self,s):
+        return ""
+
+    def check(self):
+        return self.check2(self.get())
+
+class multiRow(baseWiget):
     def __init__(self,master,rownum,text):
         self.FrameBody=master
         self.row_number=rownum
@@ -50,9 +61,8 @@ class multiRow():
             line["lable"].destroy()
             line["entry"].destroy()
             self.row_number = self.row_number - 1
-        pass
 
-class label():
+class label(baseWiget):
     def __init__(self,master,label_text,rowNum,clomNum):
         entry = Entry(master, width=8)
         entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
@@ -112,7 +122,7 @@ class date(label):
             return False
         return True
 
-class option():
+class option(baseWiget):
     def __init__(self, master, label_text, rowNum, clomNum,values):
         Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         chosenString = StringVar()
@@ -137,7 +147,7 @@ class option():
 
 
 
-class maintext():
+class maintext(baseWiget):
     def __init__(self, parent):
         Label(parent, text="*文件内容:").pack(side='top', anchor='w')
         box=Frame(parent)
