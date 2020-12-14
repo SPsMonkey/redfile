@@ -5,6 +5,9 @@ from tkinter import filedialog
 import json
 import redfileWigets
 import about_dialog
+import configparser
+import os
+
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
     #:param root:主窗体实例
@@ -31,10 +34,12 @@ def set_win_center(root, curWidth='', curHight=''):
     root.geometry(size_xy)
 def hello():
     pass
-def open_peizhi():
-    filename=tk.filedialog.askopenfilename(title='加载配置',filetypes=[('red files','.redfile'), ('all files', '.*')])
-    if filename=="":
-        return
+def open_peizhi(filename=None):
+    if filename==None:
+        filename=tk.filedialog.askopenfilename(title='加载配置',filetypes=[('red files','.redfile'), ('all files', '.*')])
+        if filename=="":
+            return
+        write_config("main","peizhi",filename)
     with open(filename) as file_obj:
         data = json.load(file_obj)
     Current_tab = tabview.tab(tabview.select(), "text")
@@ -90,6 +95,36 @@ def buttonbox(root):
     gen.pack(side=tk.RIGHT, padx=5, pady=5)
     box.pack()
 
+def create_config():
+    config = configparser.ConfigParser()
+    config['main'] = {'peizhi': ' '}
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
+
+def read_config(section,key):
+    if not os.path.exists('config.ini'):
+        create_config()
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    if not (section in config.sections()):
+        config.add_section(section)
+    if not(key in config["main"]):
+        config.set("main","peizhi"," ")
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
+    filepath=config[section][key]
+    if not os.path.exists(filepath):
+        return None
+    return filepath
+
+
+def write_config(section,key,value):
+    config = configparser.ConfigParser()
+    config[section] = {key: value}
+    with open('config.ini', 'w') as configfile:
+        config.write(configfile)
+
+
 if __name__ == '__main__':
     root = tk.Tk()
     addMenu(root)
@@ -100,7 +135,10 @@ if __name__ == '__main__':
     tabs["下行文"]=tab3
     tabview.add(tab3,text="下行文")
     tabview.pack(expand = True, fill = tk.BOTH)
-
     buttonbox(root)
     #set_win_center(root, 450, 600)
+    filepath=read_config("main","peizhi")
+    print(filepath)
+    if filepath!=None:
+        open_peizhi(filename=filepath)
     root.mainloop()

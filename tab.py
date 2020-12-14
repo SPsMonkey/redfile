@@ -11,11 +11,14 @@ class fen_hao(label): #份号
             return "份号必须是数字。"
         else:
             return ""
+    def hint_message(self):
+        return "一般为6位阿拉伯数字。例如：123456阿道夫第三方士大夫对方水电费都是发送发送到发送到发送到发的说法是的"
 
 class bao_mi_deng_ji(option):
     def __init__(self, master, rowNum, clomNum):
         option.__init__(self, master, "保密等级：", rowNum, clomNum,("无", "绝密","机密","秘密" ))
-
+    def hint_message(self):
+        return "保密等级。例如：123456"
 
 class bao_mi_qi_xian(label):
     def __init__(self, master, rowNum, clomNum):

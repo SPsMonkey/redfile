@@ -1,12 +1,17 @@
 from tkinter import  *
 from tkinter import ttk
 import const
+import edit_hint
+
 class baseWiget():
 
     def get(self):
         pass
     def set(self):
         pass
+    def hint_message(self):
+        return None
+
     def check2(self,s):
         return ""
 
@@ -52,6 +57,9 @@ class multiRow(baseWiget):
         line["entry"] = Entry(master, width=28,textvariable=v)
         line["entry"].grid(row=self.row_number, column=1, columnspan=3, padx=const.padx, pady=const.pady, sticky=W)
         line["entry"].bind("<Button-3>", lambda x: rightKey(x, line["entry"]))  # 绑定右键鼠标事件
+        hintmsg=self.hint_message()
+        if hintmsg!=None:
+            edit_hint.ToolTip(line["entry"], msg=hintmsg, msgFunc=None, follow=True, delay=0)
         self.list.append(line)
         self.row_number = self.row_number + 1
 
@@ -74,6 +82,9 @@ class label(baseWiget):
         entry.config(textvariable=v)
         self.entry=v
         entry.bind("<Button-3>", lambda x: rightKey(x, entry))  # 绑定右键鼠标事件
+        hintmsg=self.hint_message()
+        if hintmsg!=None:
+            edit_hint.ToolTip(entry, msg=hintmsg, msgFunc=None, follow=True, delay=0)
 
     def get(self):
         return self.entry.get()
@@ -127,6 +138,9 @@ class option(baseWiget):
         Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         chosenString = StringVar()
         cobobox = ttk.Combobox(master, width=5, textvariable=chosenString, state="readonly")
+        hintmsg = self.hint_message()
+        if hintmsg != None:
+            edit_hint.ToolTip(cobobox, msg=hintmsg, msgFunc=None, follow=True, delay=0)
         cobobox['values'] = values  # 设置下拉列表的值
         cobobox.grid(column=clomNum + 1, row=rowNum, padx=const.padx, pady=const.pady,
                           sticky=W)  # 设置其在界面中出现的位置  column代表列   row 代表行
@@ -159,6 +173,9 @@ class maintext(baseWiget):
         box.pack(expand='yes', fill='x')
         self.text=text
         text.bind("<Button-3>", lambda x: rightKey(x,text))  # 绑定右键鼠标事件
+        hintmsg = self.hint_message()
+        if hintmsg != None:
+            edit_hint.ToolTip(text, msg=hintmsg, msgFunc=None, follow=True, delay=0)
 
     def get(self):
         return self.text.get('0.0','end')
