@@ -12,21 +12,25 @@ class fen_hao(label): #份号
         else:
             return ""
     def hint_message(self):
-        return "一般为6位阿拉伯数字。例如：123456阿道夫第三方士大夫对方水电费都是发送发送到发送到发送到发的说法是的"
+        return "公文印制份数的顺序号，涉密公文应当标注份号，一般为6位阿拉伯数字。\n例如：123456"
 
 class bao_mi_deng_ji(option):
     def __init__(self, master, rowNum, clomNum):
         option.__init__(self, master, "保密等级：", rowNum, clomNum,("无", "绝密","机密","秘密" ))
     def hint_message(self):
-        return "保密等级。例如：123456"
+        return "涉密公文应当根据涉密程度分别标注“绝密”“机密”“秘密”。"
 
 class bao_mi_qi_xian(label):
     def __init__(self, master, rowNum, clomNum):
         label.__init__(self, master, "保密期限：", rowNum, clomNum)
+    def hint_message(self):
+        return "涉密公文应当根据情况标注保密期限。例如：1年"
 
 class jin_ji_cheng_du(option):
     def __init__(self, master, rowNum, clomNum):
         option.__init__(self, master, "紧急程度：", rowNum, clomNum,("无", "特急","加急","特提","平急" ))
+    def hint_message(self):
+        return "公文送达和办理的时限要求。根据紧急程度，紧急公文应当分别标注“特急”“加急”，电报应当分别标注“特提”“特急”“加急”“平急”。"
 
 class fa_wen_ji_guan(multiRow):
     def __init__(self,master,rownum):
@@ -37,6 +41,8 @@ class fa_wen_ji_guan(multiRow):
             return  "发文机关不能为空。"
         else:
             return ""
+    def hint_message(self):
+        return "发文机关全称"
 
 class ji_guan_dai_zi(label):
     def __init__(self, master, rowNum, clomNum):
@@ -46,6 +52,8 @@ class ji_guan_dai_zi(label):
             return "发文机关代字不能为空。"
         else:
             return ""
+    def hint_message(self):
+        return "发文机关全称"
 
 class nian_fen(label):
     def __init__(self, master, rowNum, clomNum):
