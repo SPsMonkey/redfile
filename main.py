@@ -69,10 +69,8 @@ def addMenu(root):
 
     # create more pulldown menus
     editmenu = tk.Menu(menubar, tearoff=0)
-    editmenu.add_command(label="Cut", command=hello)
-    editmenu.add_command(label="Copy", command=hello)
-    editmenu.add_command(label="Paste", command=hello)
-    menubar.add_cascade(label="Edit", menu=editmenu)
+    editmenu.add_command(label="关闭输入提示", command=hello)
+    menubar.add_cascade(label="选项", menu=editmenu)
 
     helpmenu = tk.Menu(menubar, tearoff=0)
     helpmenu.add_command(label="关于", command=about)
@@ -97,7 +95,7 @@ def buttonbox(root):
 
 def create_config():
     config = configparser.ConfigParser()
-    config['main'] = {'peizhi': ' '}
+    config['main'] = {'peizhi': ' ','is_hint':'true'}
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
@@ -108,14 +106,15 @@ def read_config(section,key):
     config.read('config.ini')
     if not (section in config.sections()):
         config.add_section(section)
-    if not(key in config["main"]):
-        config.set("main","peizhi"," ")
+    if not(key in config[section]):
+        if key=="peizhi":
+            config.set(section,key," ",)
+        if key=="is_hint":
+            config.set(section, key, 'true', )
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
-    filepath=config[section][key]
-    if not os.path.exists(filepath):
-        return None
-    return filepath
+    result=config[section][key]
+    return result
 
 
 def write_config(section,key,value):
@@ -138,7 +137,8 @@ if __name__ == '__main__':
     buttonbox(root)
     #set_win_center(root, 450, 600)
     filepath=read_config("main","peizhi")
-    print(filepath)
-    if filepath!=None:
+    if  os.path.exists(filepath):
         open_peizhi(filename=filepath)
+    ishint=read_config("main","is_hint")
+
     root.mainloop()

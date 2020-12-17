@@ -53,7 +53,7 @@ class ji_guan_dai_zi(label):
         else:
             return ""
     def hint_message(self):
-        return "发文机关全称"
+        return "填写发文机关代字"
 
 class nian_fen(label):
     def __init__(self, master, rowNum, clomNum):
@@ -65,6 +65,8 @@ class nian_fen(label):
             return "年份必须为4位阿拉伯数字。"
         else:
             return ""
+    def hint_message(self):
+        return "填写发文年份。例如：2020"
 
 class fa_wen_hao(label):
     def __init__(self, master, rowNum, clomNum):
@@ -76,6 +78,8 @@ class fa_wen_hao(label):
             return "发文号必须为阿拉伯数字。"
         else:
             return ""
+    def hint_message(self):
+        return "填写发文顺序号。例如：20"
 
 class biao_ti(longlabel):
     def __init__(self, master, rowNum, clomNum):
@@ -85,6 +89,8 @@ class biao_ti(longlabel):
             return "标题不能为空。"
         else:
             return ""
+    def hint_message(self):
+        return "填写文件标题，由发文机关名称、事由和文种组成。"
 
 class cheng_wen_ri_qi(date):
     def __init__(self, master, rowNum, clomNum):
@@ -96,11 +102,15 @@ class cheng_wen_ri_qi(date):
             return "请输入正确格式的成文日期"
         else:
             return ""
+    def hint_message(self):
+        return "署会议通过或者发文机关负责人签发的日期。联合行文时，署最后签发机关负责人签发的日期。例如：2020年1月1日"
 
 class fu_jian(multiRow):
     def __init__(self,master,rownum):
         multiRow.__init__(self,master,rownum,"附件：")
 
+    def hint_message(self):
+        return "依次公文附件名称"
 
 class yin_fa_ri_qi(date):
     def __init__(self, master, rowNum, clomNum):
@@ -111,15 +121,21 @@ class yin_fa_ri_qi(date):
                 return "请输入正确格式的成文日期"
         else:
             return ""
+    def hint_message(self):
+        return "公文的送印日期。例如：2020年1月1日。如不填写则默认与成文日期一致。"
 
 class chao_song(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "抄送机关：", rowNum, clomNum)
+    def hint_message(self):
+        return "除主送机关外需要执行或者知晓公文内容的其他机关，应当使用机关全称、规范化简称或者同类型机关统称。名称之间用顿号隔开。"
 
 
 class yin_fa(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "印发机关：", rowNum, clomNum)
+    def hint_message(self):
+        return "公文的送印机关名称。如不填写则默认与发文机关一致"
 
 class is_red_paper(baseWiget):
     def __init__(self,master):

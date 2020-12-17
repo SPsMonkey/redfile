@@ -187,6 +187,8 @@ class maintext(baseWiget):
             return "文件内容不能为空."
         else:
             return ""
+    def hint_message(self):
+        return "公文的主体。\n注意：文中结构层次序数请依次使用“一、“”（一）“、”1.“、”（1）“。"
 
 menubar=0
 def cut(editor, event=None):
