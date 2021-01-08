@@ -1,11 +1,9 @@
-from tkinter import *
-from tkinter import ttk
-import const
+
 from tab import *
 import tkinter.messagebox
 
 
-class Xiaxinwen(tab):
+class Shangxinwen(tab):
     def body(self, master):
         xia=self.allWigets
         # 一般用6位3号阿拉伯数字
@@ -51,6 +49,3 @@ class Xiaxinwen(tab):
             tkinter.messagebox.showerror('错误', result)
         else:
             pass
-
-
-

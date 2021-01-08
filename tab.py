@@ -186,6 +186,18 @@ class tab(Frame):
     def apply(self):
         pass # override
 
+    def getData(self):
+        xia=self.allWigets
+        data={}
+        for key in xia:
+            data[key]=xia[key].get()
+        return data
+
+    def setData(self,data):
+        xia=self.allWigets
+        for key in data:
+            xia[key].set(data[key])
+
     def show_other(self):
         if self.is_hide==True:
             self.main_text_body.forget()

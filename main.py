@@ -1,5 +1,6 @@
 import tkinter as tk
 from XiaXingWen import Xiaxinwen
+from ShangXingWen import Shangxinwen
 from tkinter import ttk
 from tkinter import filedialog
 import json
@@ -130,10 +131,15 @@ if __name__ == '__main__':
     tabs={}
     tabview=ttk.Notebook(root)
 
-    tab3=Xiaxinwen(tabview)
-    tabs["下行文"]=tab3
-    tabview.add(tab3,text="下行文")
-    tabview.pack(expand = True, fill = tk.BOTH)
+    tab1=Xiaxinwen(tabview)
+    tabs["下行文"]=tab1
+    tabview.add(tab1,text="下行文")
+
+    tab2 = Shangxinwen(tabview)
+    tabs["上行文"] = tab2
+    tabview.add(tab2, text="上行文")
+    tabview.pack(expand=True, fill=tk.BOTH)
+
     buttonbox(root)
     #set_win_center(root, 450, 600)
     filepath=read_config("main","peizhi")
