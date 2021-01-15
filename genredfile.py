@@ -2,16 +2,14 @@ from win32com.client import Dispatch
 import  math
 import RedFunc as rf
 def start():
-    app = Dispatch('wps.Application')
-    print(app)
-    return
+    app = Dispatch('word.Application')
     # 新建word文档
     app.Visible = True
     rf.doc = app.Documents.Add()
     rf.s= rf.doc.Application.Selection
     rf.setPage()
 
-def genup(data):
+def gendown(data):
     start()
     rf.addFileNum(data["份号"])
     rf.add_SecurityLevel_Time(data["保密等级"],data["保密期限"])
@@ -25,21 +23,15 @@ def genup(data):
     rf.add_fujian_shuo_min(data["附件"])
     rf.add_name_date(data["发文机关"],data["成文日期"])
     rf.add_fujian(data["附件"])
-    rf.add_end("",data["抄送机关"],data["印发机关"],data["印发日期"])
+    rf.add_end(data)
 
     #156/442.5 纸张mm数比线条单位比值  33+10.5x换算成
     #new_document.SaveAs("G:/python/win32com/3.docx")
     #new_document.Close()
     #app.Quit()
-def gendown():
-    app = Dispatch('wps.Application')
-    print(app)
-    return
-    # 新建word文档
-    app.Visible = True
-    rf.doc = app.Documents.Add()
-    rf.s= rf.doc.Application.Selection
-    rf.setPage()
+def genup():
+    start()
+
     pass
 if __name__ == '__main__':
 
@@ -54,4 +46,4 @@ if __name__ == '__main__':
           "抄送机关":"县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
           "印发机关":"县农业农村局",
           "印发日期":"2020年3月21日"}
-    genup(data)
+    gendown(data)

@@ -7,10 +7,13 @@ class fen_hao(label): #份号
         label.__init__(self,master,"份号：",rowNum,clomNum)
 
     def check2(self,s):
-        if not s.isdigit():
-            return "份号必须是数字。"
-        else:
+        if s=="":
             return ""
+        else:
+            if not s.isdigit():
+                return "份号必须是数字。"
+            else:
+                return ""
     def hint_message(self):
         return "公文印制份数的顺序号，涉密公文应当标注份号，一般为6位阿拉伯数字。\n例如：123456"
 
@@ -80,6 +83,16 @@ class fa_wen_hao(label):
             return ""
     def hint_message(self):
         return "填写发文顺序号。例如：20"
+class qian_fa_ren(label):
+    def __init__(self, master, rowNum, clomNum):
+        label.__init__(self, master, "签发人：", rowNum, clomNum)
+    def check2(self,s):
+        if s == "":
+            return "签发人不能为空。"
+        else:
+            return ""
+    def hint_message(self):
+        return "填写签发人姓名，多个人请用空格隔开。例如：李某某 张某某"
 
 class biao_ti(longlabel):
     def __init__(self, master, rowNum, clomNum):

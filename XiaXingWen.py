@@ -3,7 +3,7 @@ from tkinter import ttk
 import const
 from tab import *
 import tkinter.messagebox
-
+import genredfile
 
 class Xiaxinwen(tab):
     def body(self, master):
@@ -50,7 +50,7 @@ class Xiaxinwen(tab):
         if result !="":
             tkinter.messagebox.showerror('错误', result)
         else:
-            pass
+            genredfile.gendown(data)
 
 
 

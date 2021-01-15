@@ -189,9 +189,10 @@ def add_redfile_num(sybol,year,num):
     s.TypeText(year)
     s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
     s.TypeText(num+"号")
-    s.TypeText("\n\n\n")
+    s.TypeText("\n")
 
 def add_title(str):
+    s.TypeText("\n\n")
     s.font.Name = '方正小标宋简体'
     # 字号设置为二号
     s.font.Size = 22
@@ -210,7 +211,7 @@ def add_content(str):
     s.TypeText("\n")
 
 def add_fujian_shuo_min(data):
-    if len(data)==0:
+    if data[0]=="":
         return
     else:
         s.TypeText("\n")
@@ -233,15 +234,17 @@ def add_name_date(name,date):
     # 字号设置为三号
     s.font.Size = 16
     s.font.color = 0
-    s.TypeText("\n\n\n")
+    s.TypeText("\n\n")
     s.ParagraphFormat.Alignment = 2  #段落右对齐
     s.ParagraphFormat.WordWrap = False  #让行末的空格显示出来
     if len(name)==1:
         s.ParagraphFormat.Alignment = 2
         s.TypeText(name[0])
         s.TypeText(2*chr(12288))
+        s.TypeText("\n")
         s.TypeText(date)
         s.TypeText(2*chr(12288))
+        s.TypeText("\n")
     else:
 
         for text in name:
@@ -254,8 +257,9 @@ def add_name_date(name,date):
         n_col = s.Information(9)  # 获取输入点所在列数
         s.TypeText("\n"+date+"    \n")
 
+
 def add_fujian(data):
-    if len(data)==0:
+    if data[0]=="":
         return
     else:
         for i in range(1,len(data)+1):
@@ -280,7 +284,17 @@ def add_fujian(data):
                 s.TypeText("\n"+2 * chr(12288) + "在此粘贴附件内容")
         s.TypeText("\n")
 
-def add_end(zhuson,chaoson,yinfa,date):#添加版记 包括抄送 印发机关 印发日期
+def add_end(data):#添加版记 包括抄送 印发机关 印发日期
+    zhuson=""
+    chaoson=data["抄送机关"]
+    if data["印发机关"]=="":
+        yinfa=data["发文机关"][0]
+    else:
+        yinfa=data["印发机关"]
+    if data["印发日期"]=="":
+        date=data["成文日期"]
+    else:
+        date=data["印发日期"]
     s.ParagraphFormat.Alignment = 0
     space=59-len(yinfa)*2-3*2-(len(date)-3)-2-4 #计算印发机关和印发日期中间需要多少空格
 

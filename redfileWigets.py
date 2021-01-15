@@ -2,7 +2,7 @@ from tkinter import  *
 from tkinter import ttk
 import const
 import edit_hint
-
+#所有控件的基类
 class baseWiget():
 
     def get(self):
@@ -178,12 +178,12 @@ class maintext(baseWiget):
             edit_hint.ToolTip(text, msg=hintmsg, msgFunc=None, follow=True, delay=0)
 
     def get(self):
-        return self.text.get('0.0','end')
+        return self.text.get('0.0','end')[:-1]
     def set(self,data):
         self.text.delete('1.0', 'end')
         self.text.insert('1.0',data)
     def check(self):
-        if self.get()=="\n":
+        if self.get()=="":
             return "文件内容不能为空."
         else:
             return ""

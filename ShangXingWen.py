@@ -14,6 +14,7 @@ class Shangxinwen(tab):
         xia["发文机关"]=fa_wen_ji_guan(master,1)
         xia["标题"]=biao_ti(master,50,0)
         xia["成文日期"]=cheng_wen_ri_qi(master, 51,0)
+        xia["签发人"]=qian_fa_ren(master,51,3)
 
 
     def other(self,master):

@@ -37,14 +37,19 @@ def hello():
     pass
 def open_peizhi(filename=None):
     if filename==None:
-        filename=tk.filedialog.askopenfilename(title='加载配置',filetypes=[('red files','.redfile'), ('all files', '.*')])
-        if filename=="":
+        fname=tk.filedialog.askopenfilename(title='加载配置',filetypes=[('red files','.redfile'), ('all files', '.*')])
+        if fname=="":
             return
-        write_config("main","peizhi",filename)
-    with open(filename) as file_obj:
+    else:
+        fname=filename
+    with open(fname) as file_obj:
         data = json.load(file_obj)
-    Current_tab = tabview.tab(tabview.select(), "text")
-    tabs[Current_tab].setData(data)
+    tabclass=data["公文种类"]
+    del data["公文种类"]
+    tabs[tabclass].setData(data)
+    if filename==None:
+        tabview.select(tabs[tabclass])
+        write_config("main", tabsname[tabclass], fname)
 
 def save_peizhi():
     filename=tk.filedialog.asksaveasfilename(title='保存配置', defaultextension=".redfile",
@@ -53,6 +58,7 @@ def save_peizhi():
         return
     Current_tab = tabview.tab(tabview.select(), "text")
     data=tabs[Current_tab].getData()
+    data["公文种类"]=Current_tab
     with open(filename, 'w') as file_obj:
         json.dump(data, file_obj, indent=2, ensure_ascii=False)
 
@@ -96,7 +102,7 @@ def buttonbox(root):
 
 def create_config():
     config = configparser.ConfigParser()
-    config['main'] = {'peizhi': ' ','is_hint':'true'}
+    config['main'] = {'current_tab': 'xia_xing_wen','is_hint':'true'}
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
@@ -108,7 +114,11 @@ def read_config(section,key):
     if not (section in config.sections()):
         config.add_section(section)
     if not(key in config[section]):
-        if key=="peizhi":
+        if key=="current_tab":
+            config.set(section,key,"xia_xing_wen",)
+        if key=="shang_xing_wen":
+            config.set(section,key," ",)
+        if key=="xia_xing_wen":
             config.set(section,key," ",)
         if key=="is_hint":
             config.set(section, key, 'true', )
@@ -120,31 +130,47 @@ def read_config(section,key):
 
 def write_config(section,key,value):
     config = configparser.ConfigParser()
-    config[section] = {key: value}
+    config.read('config.ini')
+    config.set(section,key,value)
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
+def getkey(dic,value):
+    for key in dic:
+        if dic[key] == value:
+            return key
+
+def closeWindow():
+    Current_tab = tabview.tab(tabview.select(), "text")
+    write_config("main", "current_tab", tabsname[Current_tab])
+    root.destroy()
 
 if __name__ == '__main__':
     root = tk.Tk()
     addMenu(root)
     tabs={}
+    tabsname={}
     tabview=ttk.Notebook(root)
 
     tab1=Xiaxinwen(tabview)
     tabs["下行文"]=tab1
+    tabsname["下行文"]="xia_xing_wen"
     tabview.add(tab1,text="下行文")
 
     tab2 = Shangxinwen(tabview)
     tabs["上行文"] = tab2
+    tabsname["上行文"] = "shang_xing_wen"
     tabview.add(tab2, text="上行文")
     tabview.pack(expand=True, fill=tk.BOTH)
 
     buttonbox(root)
     #set_win_center(root, 450, 600)
-    filepath=read_config("main","peizhi")
-    if  os.path.exists(filepath):
-        open_peizhi(filename=filepath)
+    for key in tabsname:
+        filepath=read_config("main",tabsname[key])
+        if  os.path.exists(filepath):
+            open_peizhi(filename=filepath)
     ishint=read_config("main","is_hint")
-
+    ctab=read_config("main", "current_tab")
+    tabview.select(tabs[getkey(tabsname,ctab)])
+    root.protocol('WM_DELETE_WINDOW', closeWindow)
     root.mainloop()
