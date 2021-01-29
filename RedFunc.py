@@ -31,6 +31,7 @@ def setFont(fontName="仿宋",size="三号",color="黑色"):
         s.font.color=255
     else:
         s.font.color=color
+
 def inser_empty_row(n_row):
     s.TypeText("\n" * n_row)
 
@@ -213,9 +214,18 @@ def add_redfile_num(sybol,year,num):
 
 def add_title(str): #行间距要调成固定值29.75磅 不然会占用2行
     setFont("方正小标宋简体","二号")
-    s.ParagraphFormat.Alignment = 1
+    s.ParagraphFormat.Alignment = 1 #居中
+    s.ParagraphFormat.DisableLineHeightGrid = True
+    s.ParagraphFormat.WordWrap = True
+    s.ParagraphFormat.LineSpacingRule = 4 #固定值
+    s.ParagraphFormat.LineSpacing = 29.75
     s.TypeText(str)
+
     s.TypeText("\n")
+    setFont()
+    s.ParagraphFormat.LineSpacingRule = 0  # 单倍行距
+    s.ParagraphFormat.DisableLineHeightGrid = False
+    s.ParagraphFormat.WordWrap = False
 
 def add_content(str):
     setFont()
