@@ -1,7 +1,39 @@
 import math
 cm_to_points = 28.35  # 1厘米为28.35磅
+font_size={ "初号":42,
+            "小初":36,
+            "一号":26,
+            "小一":24,
+            "二号":22,
+            "小二":18,
+            "三号":16,
+            "小三":15,
+            "四号":14,
+            "小四":12,
+            "五号":10.5,
+            "小五":9,
+            "六号":7.5,
+            "小六":6.5,
+            "七号":5.5,
+            "八号":5
+            }
 s=None
 doc=None
+def setFont(fontName="仿宋",size="三号",color="黑色"):
+    s.font.Name=fontName
+    if type(size)==type(1) or type(size)==type(1.5):
+        s.font.size=size
+    else:
+        s.font.size=font_size[size]
+    if color == "黑色":
+        s.font.color=0
+    elif color=="红色":
+        s.font.color=255
+    else:
+        s.font.color=color
+def inser_empty_row(n_row):
+    s.TypeText("\n" * n_row)
+
 def add_line(anchor,n,weight,color): #在文档中添加横线
     line_height=(33+10.5*n)*2.835 # 442.5/156
     line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,anchor).line
@@ -94,9 +126,7 @@ def setPage():#页面页面字号设置
     w.view.seekview = 0
 
 def addFileNum(str):#份号
-    s.font.Name = '仿宋'
-    # 字号设置为三号
-    s.font.Size = 16
+    setFont("仿宋","三号")
     s.TypeText(str)
     s.TypeText("\n")
 
@@ -104,9 +134,7 @@ def add_SecurityLevel_Time(level,time):#保密等级及保密期限
     if level=="无":
         pass
     else:
-        s.font.Name = '黑体'
-        # 字号设置为三号
-        s.font.Size = 16
+        setFont("黑体","三号")
         s.TypeText(level)
         s.InsertSymbol(Font = "黑体", CharacterNumber = 9733, Unicode = True) #插入五角星
         s.TypeText(time)
@@ -116,17 +144,12 @@ def add_emergency_level(str):
     if str=="无":
         pass
     else:
-        s.font.Name = '黑体'
-        # 字号设置为三号
-        s.font.Size = 16
+        setFont("黑体", "三号")
         s.TypeText(str)
     s.TypeText("\n")
 
 def add_red_title(str): #添加大红头
-    s.font.Name = '方正小标宋简体'
-    # 字号设置为小初号
-    s.font.Size = 36
-    s.font.color=255
+    setFont("方正小标宋简体", "小初","红色")
     s.ParagraphFormat.Alignment=1#1是居中0 是靠左 2是靠右
     maxwidth=15.6 #表格最大宽度 单位cm 初号字正常宽度1.3 如果超过12个字就需要压缩字宽度
 
@@ -175,37 +198,27 @@ def add_red_title(str): #添加大红头
             s.Font.Scaling=int(11.8*100/maxlen)
         s.MoveDown()
 
-    s.font.Size = 16
-    s.TypeText("\n\n")
+    setFont()
+    s.TypeText("\n")
 
 def add_redfile_num(sybol,year,num):
-    s.font.Name = '仿宋'
-    # 字号设置为三号
-    s.font.Size = 16
-    s.font.color = 0
+    setFont()
     s.ParagraphFormat.Alignment = 1
     s.TypeText(sybol)
-    s.InsertSymbol(Font="仿宋", CharacterNumber=12308, Unicode=True)
+    s.InsertSymbol(Font="仿宋", CharacterNumber=12308, Unicode=True)#输入六边形括号
     s.TypeText(year)
     s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
     s.TypeText(num+"号")
     s.TypeText("\n")
 
-def add_title(str):
-    s.TypeText("\n\n")
-    s.font.Name = '方正小标宋简体'
-    # 字号设置为二号
-    s.font.Size = 22
-    s.font.color = 0
+def add_title(str): #行间距要调成固定值29.75磅 不然会占用2行
+    setFont("方正小标宋简体","二号")
     s.ParagraphFormat.Alignment = 1
     s.TypeText(str)
-    s.TypeText("\n\n")
+    s.TypeText("\n")
 
 def add_content(str):
-    s.font.Name = '仿宋'
-    # 字号设置为三号
-    s.font.Size = 16
-    s.font.color = 0
+    setFont()
     s.ParagraphFormat.Alignment = 0
     s.TypeText(str)
     s.TypeText("\n")
@@ -230,10 +243,7 @@ def add_fujian_shuo_min(data):
         s.ParagraphFormat.HangingPunctuation = False
 
 def add_name_date(name,date):
-    s.font.Name = '仿宋'
-    # 字号设置为三号
-    s.font.Size = 16
-    s.font.color = 0
+    setFont()
     s.TypeText("\n\n")
     s.ParagraphFormat.Alignment = 2  #段落右对齐
     s.ParagraphFormat.WordWrap = False  #让行末的空格显示出来
