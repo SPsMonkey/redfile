@@ -1,7 +1,7 @@
-from tkinter import  *
+from tkinter import *
 from tkinter import ttk
-import const
-import edit_hint
+from . import const
+from . import edit_hint
 #所有控件的基类
 class baseWiget():
 

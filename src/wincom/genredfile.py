@@ -1,6 +1,6 @@
 from win32com.client import Dispatch
-import  math
-import RedFunc as rf
+
+from . import RedFunc as rf
 def start():
     app = Dispatch('word.Application')
     # 新建word文档

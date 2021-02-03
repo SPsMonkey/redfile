@@ -1,7 +1,7 @@
 from tkinter import  *
-from redfileWigets import *
+from .redfileWigets import *
 from tkinter import ttk
-import const
+
 class fen_hao(label): #份号
     def __init__(self,master,rowNum,clomNum):
         label.__init__(self,master,"份号：",rowNum,clomNum)

@@ -1,7 +1,9 @@
 from tkinter import *
 import tkinter.font as tf
-import tkSimpleDialog
 import webbrowser
+
+from . import tkSimpleDialog
+
 
 
 def glink(event):

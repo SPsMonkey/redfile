@@ -1,11 +1,9 @@
-from tkinter import *
-from tkinter import ttk
-import const
-from tab import *
-import tkinter.messagebox
-import genredfile
 
-class Xiaxinwen(tab):
+from .tab import *
+import tkinter.messagebox
+
+
+class Shangxinwen(tab):
     def body(self, master):
         xia=self.allWigets
         # 一般用6位3号阿拉伯数字
@@ -16,6 +14,7 @@ class Xiaxinwen(tab):
         xia["发文机关"]=fa_wen_ji_guan(master,1)
         xia["标题"]=biao_ti(master,50,0)
         xia["成文日期"]=cheng_wen_ri_qi(master, 51,0)
+        xia["签发人"]=qian_fa_ren(master,51,3)
 
 
     def other(self,master):
@@ -50,7 +49,4 @@ class Xiaxinwen(tab):
         if result !="":
             tkinter.messagebox.showerror('错误', result)
         else:
-            genredfile.gendown(data)
-
-
-
+            pass

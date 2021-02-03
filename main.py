@@ -1,13 +1,15 @@
 import tkinter as tk
-from XiaXingWen import Xiaxinwen
-from ShangXingWen import Shangxinwen
 from tkinter import ttk
 from tkinter import filedialog
 import json
-import redfileWigets
-import about_dialog
 import configparser
 import os
+
+from src.interface.XiaXingWen import Xiaxinwen
+from src.interface.ShangXingWen import Shangxinwen
+from src.interface import redfileWigets
+from src.interface import about_dialog
+
 
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
