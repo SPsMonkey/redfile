@@ -155,12 +155,26 @@ class is_red_paper(baseWiget):
         checkvar=IntVar()
         check = Checkbutton(master, text="是否使用红头纸打印",variable = checkvar, \
                  onvalue = 1, offvalue = 0)
-        check.pack(padx=5, pady=5, side="left", anchor='w')
+        check.grid(row=100, column=0,columnspan=2, padx=5, pady=5, sticky=W)
         self.isCheck=checkvar
     def get(self):
         return self.isCheck.get()
     def set(self,data):
         self.isCheck.set(data)
+class tiao_zhen_can_shu(label): #份号
+    def __init__(self,master,rowNum,clomNum):
+        label.__init__(self,master,"调整参数：",rowNum,clomNum)
+
+    def check2(self,s):
+
+        return ""
+    def hint_message(self):
+        return "这个参数决定发文字号的高低，正数降低，负数升高，单位为毫米，设置合适的数值使其刚好位于红头文件纸的红线之上。例如：30。"
+    def get(self):
+        num=label.get(self)
+        return float(num)
+
+
 
 class tab(Frame):
     def __init__(self, parent):
@@ -171,14 +185,14 @@ class tab(Frame):
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
 
-        middle_body=Frame(self)
-        self.allWigets["是否使用红头纸"]=is_red_paper(middle_body)
 
-        show_hide = Button(middle_body, text="显示其他选项", command=lambda: self.show_other(), default=ACTIVE)
-        show_hide.pack(padx=5, pady=5,side="right",anchor='e')
+        self.allWigets["是否使用红头纸"]=is_red_paper(body)
+        self.allWigets["调整参数"]=tiao_zhen_can_shu(body,100,2)
+        show_hide = Button(body, text="显示其他选项", command=lambda: self.show_other(), default=ACTIVE)
+        show_hide.grid(row=100, column=4,columnspan=2,padx=5, pady=5,sticky=E)
 
         self.hide_button=show_hide
-        middle_body.pack(expand='yes', fill='x')
+
 
         other_body=Frame(self)
         self.other_body=other_body

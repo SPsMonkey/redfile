@@ -34,12 +34,19 @@ def setFont(fontName="仿宋",size="三号",color="黑色"):
 
 def inser_empty_row(n_row):
     s.TypeText("\n" * n_row)
+def getPosY():#获取选择点距离上页面上边缘的磅数
+    return s.Information(6)  #5就是x
 
 def add_line(anchor,n,weight,color): #在文档中添加横线
     line_height=(33+10.5*n)*2.835 # 442.5/156
     line=doc.Shapes.AddLine(79, line_height, 521.5, line_height,anchor).line
     line.Weight=weight
     line.ForeColor.RGB=color
+
+def drawTheRedLine(height,anchor):
+    line = doc.Shapes.AddLine(79, height, 521.5, height, anchor).line
+    line.Weight = 3
+    line.ForeColor.RGB = 255
 
 def setPage():#页面页面字号设置
     # 页面设置
@@ -149,70 +156,87 @@ def add_emergency_level(str):
         s.TypeText(str)
     s.TypeText("\n")
 
-def add_red_title(str): #添加大红头
-    setFont("方正小标宋简体", "小初","红色")
-    s.ParagraphFormat.Alignment=1#1是居中0 是靠左 2是靠右
-    maxwidth=15.6 #表格最大宽度 单位cm 初号字正常宽度1.3 如果超过12个字就需要压缩字宽度
+def add_red_title(str,isRedPaper): #添加大红头
+    if isRedPaper==1:
+        setFont()
+        return
+    else:
+        setFont("方正小标宋简体", "小初","红色")
+        s.ParagraphFormat.Alignment=1#1是居中0 是靠左 2是靠右
+        maxwidth=15.6 #表格最大宽度 单位cm 初号字正常宽度1.3 如果超过12个字就需要压缩字宽度
 
-    maxlen=len(str[0])#找出字数最长的单位
-    for i in str:
-        if maxlen<len(i):
-            maxlen=len(i)
-    maxlen=maxlen+2
+        maxlen=len(str[0])#找出字数最长的单位
+        for i in str:
+            if maxlen<len(i):
+                maxlen=len(i)
+        maxlen=maxlen+2
 
-    if len(str)==1: #单个单位行文
-        s.Text=str[0]+"文件"
-        if maxlen>12:
-            s.Font.Scaling=int(12*100/maxlen)
-        s.MoveRight()
-        s.TypeText("\n")
-        s.Font.Scaling=100
-
-    else:  #多个单位联合行文
-        table=doc.Tables.Add(s.Range,len(str),2)  #创建有2列多行的一个表格
-        table.Range.Rows.Alignment=1
-        cols=table.Columns
-        if maxlen>=12: #如果超过12个字符表格设置到最宽，列宽按比例分配
-            cols(1).Width=(14.84*(maxlen-2)/maxlen+0.38)*cm_to_points
-            cols(2).Width = (14.84*2/maxlen+0.38) * cm_to_points
-        else:
-            cols(1).Width = (15.6 * (maxlen-2) / 12+0.38) * cm_to_points  #因为word生成的表格有个默认的左右边距0.19cm，所以需要加上0.38
-            cols(2).Width = (15.6 * 2 / 12+0.38) * cm_to_points
-
-        cell=table.Cell(1,2) #将第二列合为一个单元格
-        for i in range(0,len(str)-1):
-            cell.Merge(table.Cell(i+2,2))
-        cell.VerticalAlignment=1
-
-        for i in range(0,len(str)): #第一列输入所有单位名称
-            s.Text = str[i]
-            if len(str[i])+2>=12:#字数超过10个则需要把字压扁
-                s.Font.Scaling = int(11.8 * 100 / (len(str[i])+2))
-            s.ParagraphFormat.Alignment = 4 #分散对齐
+        if len(str)==1: #单个单位行文
+            s.Text=str[0]+"文件"
+            if maxlen>12:
+                s.Font.Scaling=int(12*100/maxlen)
             s.MoveRight()
-            s.Font.Scaling = 100
+            s.TypeText("\n")
+            s.Font.Scaling=100
+
+        else:  #多个单位联合行文
+            table=doc.Tables.Add(s.Range,len(str),2)  #创建有2列多行的一个表格
+            table.Range.Rows.Alignment=1
+            cols=table.Columns
+            if maxlen>=12: #如果超过12个字符表格设置到最宽，列宽按比例分配
+                cols(1).Width=(14.84*(maxlen-2)/maxlen+0.38)*cm_to_points
+                cols(2).Width = (14.84*2/maxlen+0.38) * cm_to_points
+            else:
+                cols(1).Width = (15.6 * (maxlen-2) / 12+0.38) * cm_to_points  #因为word生成的表格有个默认的左右边距0.19cm，所以需要加上0.38
+                cols(2).Width = (15.6 * 2 / 12+0.38) * cm_to_points
+
+            cell=table.Cell(1,2) #将第二列合为一个单元格
+            for i in range(0,len(str)-1):
+                cell.Merge(table.Cell(i+2,2))
+            cell.VerticalAlignment=1
+
+            for i in range(0,len(str)): #第一列输入所有单位名称
+                s.Text = str[i]
+                if len(str[i])+2>=12:#字数超过10个则需要把字压扁
+                    s.Font.Scaling = int(11.8 * 100 / (len(str[i])+2))
+                s.ParagraphFormat.Alignment = 4 #分散对齐
+                s.MoveRight()
+                s.Font.Scaling = 100
+                s.MoveDown()
+
+            cell.Select()
+            s.Text="文件"
+            if maxlen>=12:
+                s.Font.Scaling=int(11.8*100/maxlen)
             s.MoveDown()
 
-        cell.Select()
-        s.Text="文件"
-        if maxlen>=12:
-            s.Font.Scaling=int(11.8*100/maxlen)
-        s.MoveDown()
+        setFont()
+        s.TypeText("\n")
 
-    setFont()
-    s.TypeText("\n")
-
-def add_redfile_num(sybol,year,num):
+def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
     setFont()
     s.ParagraphFormat.Alignment = 1
-    s.TypeText(sybol)
-    s.InsertSymbol(Font="仿宋", CharacterNumber=12308, Unicode=True)#输入六边形括号
-    s.TypeText(year)
-    s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
-    s.TypeText(num+"号")
+    if isRedPaper==1:
+        if adjustNumber>0:
+
+        else:
+    else:
+        pass
+    #s.TypeText(sybol)
+    #s.InsertSymbol(Font="仿宋", CharacterNumber=12308, Unicode=True)#输入六边形括号
+    #s.TypeText(year)
+    #s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
+    s.Text=sybol+"〔"+year+"〕"+num+"号"
+    if isRedPaper==1:
+        pass
+    else:
+        cY = getPosY()  # 获取输入点所在的行数
+        drawTheRedLine(cY+28,s.Range)
+    s.MoveRight()
     s.TypeText("\n")
 
-def add_title(str): #行间距要调成固定值29.75磅 不然会占用2行
+
+def add_title(str): #行间距要调成固定值29.7675磅 不然会占用2行
     setFont("方正小标宋简体","二号")
     s.ParagraphFormat.Alignment = 1 #居中
     s.ParagraphFormat.DisableLineHeightGrid = True
