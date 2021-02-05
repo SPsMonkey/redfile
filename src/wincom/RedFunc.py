@@ -217,16 +217,29 @@ def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
     setFont()
     s.ParagraphFormat.Alignment = 1
     if isRedPaper==1:
+        s.TypeBackspace()
         s.ParagraphFormat.DisableLineHeightGrid = True
         s.ParagraphFormat.WordWrap = True
         s.ParagraphFormat.LineSpacingRule = 4  # 固定值
-        s.ParagraphFormat.LineSpacing = 29.75
         row=0
         while adjustNumber>10.5:
             adjustNumber=adjustNumber-10.5
             row=row+1
         s.ParagraphFormat.LineSpacing =adjustNumber*2.835
-
+        s.TypeText("\n")
+        s.ParagraphFormat.LineSpacingRule = 0  # 单倍行距
+        s.ParagraphFormat.DisableLineHeightGrid = False
+        s.ParagraphFormat.WordWrap = False
+        s.TypeText("\n"*row)
+        s.Text = sybol + "〔" + year + "〕" + num + "号"
+        s.MoveRight()
+        s.TypeText("\n")
+        s.ParagraphFormat.DisableLineHeightGrid = True
+        s.ParagraphFormat.WordWrap = True
+        s.ParagraphFormat.LineSpacingRule = 4  # 固定值
+        s.ParagraphFormat.LineSpacing = (10.5-adjustNumber) * 2.835
+        s.TypeText("\n")
+        s.ParagraphFormat.LineSpacing = 29.7675
     else:
         s.Text = sybol + "〔" + year + "〕" + num + "号"
         cY = getPosY()  # 获取输入点所在的行数
@@ -238,6 +251,40 @@ def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
     #s.TypeText(year)
     #s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
 
+def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber):
+    setFont()
+    s.ParagraphFormat.Alignment = 1
+    if isRedPaper==1:
+        s.TypeBackspace()
+        s.ParagraphFormat.DisableLineHeightGrid = True
+        s.ParagraphFormat.WordWrap = True
+        s.ParagraphFormat.LineSpacingRule = 4  # 固定值
+        row=0
+        while adjustNumber>10.5:
+            adjustNumber=adjustNumber-10.5
+            row=row+1
+        s.ParagraphFormat.LineSpacing =adjustNumber*2.835
+        s.TypeText("\n")
+        s.ParagraphFormat.LineSpacingRule = 0  # 单倍行距
+        s.ParagraphFormat.DisableLineHeightGrid = False
+        s.ParagraphFormat.WordWrap = False
+        s.TypeText("\n"*row)
+        s.Text = sybol + "〔" + year + "〕" + num + "号"
+        s.MoveRight()
+        s.TypeText("\n")
+        s.ParagraphFormat.DisableLineHeightGrid = True
+        s.ParagraphFormat.WordWrap = True
+        s.ParagraphFormat.LineSpacingRule = 4  # 固定值
+        s.ParagraphFormat.LineSpacing = (10.5-adjustNumber) * 2.835
+        s.TypeText("\n")
+        s.ParagraphFormat.LineSpacing = 29.7675
+    else:
+        Names=names.split()
+        s.Text = sybol + "〔" + year + "〕" + num + "号"
+        cY = getPosY()  # 获取输入点所在的行数
+        drawTheRedLine(cY + 28, s.Range)
+        s.MoveRight()
+        s.TypeText("\n")
 
 
 def add_title(str): #行间距要调成固定值29.7675磅 不然会占用2行
@@ -246,7 +293,7 @@ def add_title(str): #行间距要调成固定值29.7675磅 不然会占用2行
     s.ParagraphFormat.DisableLineHeightGrid = True
     s.ParagraphFormat.WordWrap = True
     s.ParagraphFormat.LineSpacingRule = 4 #固定值
-    s.ParagraphFormat.LineSpacing = 29.75
+    s.ParagraphFormat.LineSpacing = 29.7675
     s.TypeText(str)
 
     s.TypeText("\n")
@@ -372,7 +419,7 @@ def add_end(data):#添加版记 包括抄送 印发机关 印发日期
         if chaoson!="":
             s.TypeText("抄送："+chaoson+"\n")
         s.Text = yinfa + " " * space + date + "印发"
-        add_line(s.Range, row_current-1+row_zhuson+row_chaoson, 0.5, 0)
+        add_line(s.Range, row_current-1+row_zhuson+row_chaoson, 0.7, 0)
         add_line(s.Range, row_current +row_zhuson+row_chaoson, 1, 0)
     else:
         if chaoson!="":
@@ -381,7 +428,7 @@ def add_end(data):#添加版记 包括抄送 印发机关 印发日期
             s.MoveRight()
             s.TypeText("\n")
             s.Text = yinfa + " " * space + date + "印发"
-            add_line( s.Range, row_current-1+row_chaoson, 0.5, 0)
+            add_line( s.Range, row_current-1+row_chaoson, 0.7, 0)
             add_line( s.Range, row_current + row_chaoson, 1, 0)
         else:
             s.Text = yinfa + " " * space + date + "印发"
