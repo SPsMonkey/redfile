@@ -217,23 +217,27 @@ def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
     setFont()
     s.ParagraphFormat.Alignment = 1
     if isRedPaper==1:
-        if adjustNumber>0:
+        s.ParagraphFormat.DisableLineHeightGrid = True
+        s.ParagraphFormat.WordWrap = True
+        s.ParagraphFormat.LineSpacingRule = 4  # 固定值
+        s.ParagraphFormat.LineSpacing = 29.75
+        row=0
+        while adjustNumber>10.5:
+            adjustNumber=adjustNumber-10.5
+            row=row+1
+        s.ParagraphFormat.LineSpacing =adjustNumber*2.835
 
-        else:
     else:
-        pass
+        s.Text = sybol + "〔" + year + "〕" + num + "号"
+        cY = getPosY()  # 获取输入点所在的行数
+        drawTheRedLine(cY + 28, s.Range)
+        s.MoveRight()
+        s.TypeText("\n")
     #s.TypeText(sybol)
     #s.InsertSymbol(Font="仿宋", CharacterNumber=12308, Unicode=True)#输入六边形括号
     #s.TypeText(year)
     #s.InsertSymbol(Font="仿宋", CharacterNumber=12309, Unicode=True)
-    s.Text=sybol+"〔"+year+"〕"+num+"号"
-    if isRedPaper==1:
-        pass
-    else:
-        cY = getPosY()  # 获取输入点所在的行数
-        drawTheRedLine(cY+28,s.Range)
-    s.MoveRight()
-    s.TypeText("\n")
+
 
 
 def add_title(str): #行间距要调成固定值29.7675磅 不然会占用2行
