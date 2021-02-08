@@ -32,8 +32,21 @@ def gendown(data):
     #app.Quit()
 def genup():
     start()
+    rf.addFileNum(data["份号"])
+    rf.add_SecurityLevel_Time(data["保密等级"],data["保密期限"])
+    rf.add_emergency_level(data["紧急程度"])
+    rf.add_red_title(data["发文机关"],data["是否使用红头纸"])
+    rf.inser_empty_row(1)
+    rf.add_red_num_and_qian_fa_ren(data["发文机关代字"],data["年份"],data["发文号"],data["签发人"],data["是否使用红头纸"],data["调整参数"])
+    rf.inser_empty_row(2)
+    rf.add_title(data["标题"])
+    rf.inser_empty_row(1)
+    rf.add_content(data["文件内容"])
+    rf.add_fujian_shuo_min(data["附件"])
+    rf.add_name_date(data["发文机关"],data["成文日期"])
+    rf.add_fujian(data["附件"])
+    rf.add_end(data)
 
-    pass
 if __name__ == '__main__':
 
     data={"份号":"234567","保密等级":"紧急","保密期限":"2年","紧急程度":"特急",

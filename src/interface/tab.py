@@ -169,10 +169,15 @@ class tiao_zhen_can_shu(label): #份号
 
         return ""
     def hint_message(self):
-        return "这个参数决定发文字号的高低，正数降低，负数升高，单位为毫米，设置合适的数值使其刚好位于红头文件纸的红线之上。例如：30。"
+        return "这个参数决定发文字号的高低，必须是正数，数值越大，位置越低，单位为毫米，设置合适的数值使其刚好位于红头文件纸的红线之上。例如：30。"
     def get(self):
         num=label.get(self)
-        return float(num)
+        if isFloat(num)==False:
+            num=0
+        fnum=float(num)
+        if fnum<0:
+            fnum=0.0
+        return fnum
 
 
 

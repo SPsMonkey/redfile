@@ -204,3 +204,10 @@ def rightKey(event, editor):
     menubar.add_command(label='复制',command=lambda:copy(editor))
     menubar.add_command(label='粘贴',command=lambda:paste(editor))
     menubar.post(event.x_root,event.y_root)
+
+def isFloat(aString):
+    try:
+        float(aString)
+        return True
+    except:
+        return False

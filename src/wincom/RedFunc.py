@@ -253,7 +253,7 @@ def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
 
 def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber):
     setFont()
-    s.ParagraphFormat.Alignment = 1
+    s.ParagraphFormat.Alignment = 0 #左对齐
     if isRedPaper==1:
         s.TypeBackspace()
         s.ParagraphFormat.DisableLineHeightGrid = True

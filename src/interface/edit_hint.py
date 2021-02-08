@@ -1,6 +1,17 @@
 from tkinter import *
 from time import time, localtime, strftime
- 
+hintmsg={
+"发文机关代字":"",
+"年份":"",
+"发文号":"",
+"发文机关":"",
+"标题":"",
+"成文日期":"",
+"份号":"",
+"":"",
+"":"",
+"":"",
+}
  
 class ToolTip( Toplevel ):
   """
