@@ -1,7 +1,7 @@
 
 from .tab import *
 import tkinter.messagebox
-
+from ..wincom import genredfile
 
 class Shangxinwen(tab):
     def body(self, master):
@@ -19,12 +19,14 @@ class Shangxinwen(tab):
 
     def other(self,master):
         xia = self.allWigets
-        xia["份号"] = fen_hao(master, 0, 0)
-        xia["保密等级"] = bao_mi_deng_ji(master, 1, 0)
-        xia["保密期限"] = bao_mi_qi_xian(master, 1, 2)
-        xia["紧急程度"] = jin_ji_cheng_du(master, 0, 2)
+        xia["是否使用红头纸"]=is_red_paper(master,0,0)
+        xia["调整参数"]=tiao_zhen_can_shu(master,0,2)
+        xia["份号"] = fen_hao(master, 1, 0)
+        xia["保密等级"] = bao_mi_deng_ji(master, 2, 0)
+        xia["保密期限"] = bao_mi_qi_xian(master, 2, 2)
+        xia["紧急程度"] = jin_ji_cheng_du(master, 1, 2)
 
-        xia["附件"]=fu_jian(master,2)
+        xia["附件"]=fu_jian(master,3)
 
         xia["抄送机关"] = chao_song(master, 30, 0)
         xia["印发机关"] = yin_fa(master, 31, 0)
@@ -49,4 +51,4 @@ class Shangxinwen(tab):
         if result !="":
             tkinter.messagebox.showerror('错误', result)
         else:
-            pass
+            genredfile.genup(data)

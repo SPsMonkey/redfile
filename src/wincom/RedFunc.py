@@ -254,6 +254,35 @@ def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
 def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber):
     setFont()
     s.ParagraphFormat.Alignment = 0 #左对齐
+    s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit=False #这个选项为段落里自动调整中文与数字之间的距离，会在中文和数字间加了额外距离
+    Names = names.split()
+    # 把姓名分成2名一组，名字中间用空格隔开
+    groupname = []
+    for i in range(0, len(Names), 2):
+        groupname.append(Names[i:i + 2])
+    # 找到第一列名字最长长度
+    max1 = 0
+    for name in groupname:
+        if len(name[0]) > max1:
+            max1 = len(name[0])
+    # 找到第二列名字最长长度
+    max2 = 0
+    for name in groupname:
+        if len(name) == 2:
+            if len(name[1]) > max2:
+                max2 = len(name[1])
+    # 插入空格使得名字对齐
+    for name in groupname:
+        n = max1 - len(name[0])
+        name[0] = name[0] + n * "　"
+        if len(name) == 2:
+            n = max2 - len(name[1])
+            name[1] = name[1] + n * "　"
+    for i in range(0, len(groupname)):
+        if len(groupname[i]) == 2:
+            groupname[i] = groupname[i][0] + "　" + groupname[i][1]
+        else:
+            groupname[i] = groupname[i][0]
     if isRedPaper==1:
         s.TypeBackspace()
         s.ParagraphFormat.DisableLineHeightGrid = True
@@ -279,13 +308,34 @@ def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber):
         s.TypeText("\n")
         s.ParagraphFormat.LineSpacing = 29.7675
     else:
-        Names=names.split()
-        s.Text = sybol + "〔" + year + "〕" + num + "号"
-        cY = getPosY()  # 获取输入点所在的行数
+        if len(groupname)>1:
+            #计算需要的空格数一行总共28个全角字符 减去签发人4个末尾空格一个 再减去姓名字数
+            n=23-len(groupname[0])
+            s.TypeText(n*chr(12288)+"签发人：")
+            setFont("楷体")
+            s.TypeText(groupname[0]+"\n")
+            for i in range(1,len(groupname)):
+                 if i==len(groupname)-1:
+                     setFont("仿宋")
+                     s.TypeText(chr(12288)+sybol + "〔" + year + "〕" + num + "号")
+                     n=34-len(sybol)*2-len(num)-len(year)
+                     s.TypeText(n*" ")
+                     s.Text=groupname[i]
+                     setFont("楷体")
+                 else:
+                     n=28-len(groupname[i])-1
+                     s.TypeText(n*chr(12288)+groupname[i]+"\n")
+        else:
+            s.TypeText(chr(12288) + sybol + "〔" + year + "〕" + num + "号")
+            n=38-len(sybol)*2-len(num)-len(year)-len(groupname[0])*2
+            s.TypeText(n * " "+"签发人：")
+            s.Text = groupname[i]
+            setFont("楷体")
+        cY = getPosY()  # 获取输入点所在的高度
         drawTheRedLine(cY + 28, s.Range)
         s.MoveRight()
         s.TypeText("\n")
-
+    s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit = True
 
 def add_title(str): #行间距要调成固定值29.7675磅 不然会占用2行
     setFont("方正小标宋简体","二号")

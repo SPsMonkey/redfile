@@ -151,11 +151,11 @@ class yin_fa(longlabel):
         return "公文的送印机关名称。如不填写则默认与发文机关一致"
 
 class is_red_paper(baseWiget):
-    def __init__(self,master):
+    def __init__(self,master,rownum,columnnum):
         checkvar=IntVar()
         check = Checkbutton(master, text="是否使用红头纸打印",variable = checkvar, \
                  onvalue = 1, offvalue = 0)
-        check.grid(row=100, column=0,columnspan=2, padx=5, pady=5, sticky=W)
+        check.grid(row=rownum, column=columnnum,columnspan=2, padx=5, pady=5, sticky=W)
         self.isCheck=checkvar
     def get(self):
         return self.isCheck.get()
@@ -190,9 +190,6 @@ class tab(Frame):
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
 
-
-        self.allWigets["是否使用红头纸"]=is_red_paper(body)
-        self.allWigets["调整参数"]=tiao_zhen_can_shu(body,100,2)
         show_hide = Button(body, text="显示其他选项", command=lambda: self.show_other(), default=ACTIVE)
         show_hide.grid(row=100, column=4,columnspan=2,padx=5, pady=5,sticky=E)
 

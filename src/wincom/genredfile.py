@@ -30,7 +30,7 @@ def gendown(data):
     #new_document.SaveAs("G:/python/win32com/3.docx")
     #new_document.Close()
     #app.Quit()
-def genup():
+def genup(data):
     start()
     rf.addFileNum(data["份号"])
     rf.add_SecurityLevel_Time(data["保密等级"],data["保密期限"])
