@@ -163,7 +163,7 @@ class is_red_paper(baseWiget):
         self.isCheck.set(data)
 class tiao_zhen_can_shu(label): #份号
     def __init__(self,master,rowNum,clomNum):
-        label.__init__(self,master,"调整参数：",rowNum,clomNum)
+        label.__init__(self,master,"高度调整：",rowNum,clomNum)
 
     def check2(self,s):
 
@@ -178,8 +178,22 @@ class tiao_zhen_can_shu(label): #份号
         if fnum<0:
             fnum=0.0
         return fnum
+class tiao_zhen_can_shu2(label): #份号
+    def __init__(self,master,rowNum,clomNum):
+        label.__init__(self,master,"签发人调整：",rowNum,clomNum)
 
+    def check2(self,s):
+        if s=="":
+            return ""
+        else:
+            return ""
 
+    def hint_message(self):
+        return "这个参数决定签发人左右位置，必须是正整数，数值越大，位置越靠右，单位为字符，设置合适的数值使其刚好位于签发人右侧。数值范围为0-26例如：20。"
+    def get(self):
+        num = label.get(self)
+        fnum = int(num)
+        return fnum
 
 class tab(Frame):
     def __init__(self, parent):

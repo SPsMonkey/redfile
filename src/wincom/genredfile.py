@@ -16,7 +16,7 @@ def gendown(data):
     rf.add_emergency_level(data["紧急程度"])
     rf.add_red_title(data["发文机关"],data["是否使用红头纸"])
     rf.inser_empty_row(1)
-    rf.add_redfile_num(data["发文机关代字"],data["年份"],data["发文号"],data["是否使用红头纸"],data["调整参数"])
+    rf.add_redfile_num(data["发文机关代字"],data["年份"],data["发文号"],data["是否使用红头纸"],data["高度调整"])
     rf.inser_empty_row(2)
     rf.add_title(data["标题"])
     rf.inser_empty_row(1)
@@ -37,7 +37,8 @@ def genup(data):
     rf.add_emergency_level(data["紧急程度"])
     rf.add_red_title(data["发文机关"],data["是否使用红头纸"])
     rf.inser_empty_row(1)
-    rf.add_red_num_and_qian_fa_ren(data["发文机关代字"],data["年份"],data["发文号"],data["签发人"],data["是否使用红头纸"],data["调整参数"])
+    rf.add_red_num_and_qian_fa_ren(data["发文机关代字"],data["年份"],data["发文号"],\
+        data["签发人"],data["是否使用红头纸"],data["高度调整"],data["签发人调整"])
     rf.inser_empty_row(2)
     rf.add_title(data["标题"])
     rf.inser_empty_row(1)
