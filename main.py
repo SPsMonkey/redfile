@@ -7,6 +7,7 @@ import os
 
 from src.interface.XiaXingWen import Xiaxinwen
 from src.interface.ShangXingWen import Shangxinwen
+from src.interface.XinHan import XinHan
 from src.interface import redfileWigets
 from src.interface import about_dialog
 
@@ -122,6 +123,8 @@ def read_config(section,key):
             config.set(section,key," ",)
         if key=="xia_xing_wen":
             config.set(section,key," ",)
+        if key == "xin_han":
+            config.set(section, key, " ", )
         if key=="is_hint":
             config.set(section, key, 'true', )
     with open('config.ini', 'w') as configfile:
@@ -149,6 +152,7 @@ def closeWindow():
 
 if __name__ == '__main__':
     root = tk.Tk()
+    root.title("公文生成器")
     addMenu(root)
     tabs={}
     tabsname={}
@@ -163,7 +167,15 @@ if __name__ == '__main__':
     tabs["上行文"] = tab2
     tabsname["上行文"] = "shang_xing_wen"
     tabview.add(tab2, text="上行文")
+
+    tab3=XinHan(tabview)
+    tabs["信函"] = tab3
+    tabsname["信函"] = "xin_han"
+    tabview.add(tab3, text="信函")
+
     tabview.pack(expand=True, fill=tk.BOTH)
+
+
 
     buttonbox(root)
     #set_win_center(root, 450, 600)
