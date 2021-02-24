@@ -21,7 +21,7 @@ class Xiaxinwen(tab):
     def other(self,master):
         xia = self.allWigets
         xia["是否使用红头纸"]=is_red_paper(master,0,0)
-        xia["调整参数"]=tiao_zhen_can_shu(master,0,2)
+        xia["高度调整"]=tiao_zhen_can_shu(master,0,2)
         xia["份号"] = fen_hao(master, 1, 0)
         xia["保密等级"] = bao_mi_deng_ji(master, 2, 0)
         xia["保密期限"] = bao_mi_qi_xian(master, 2, 2)

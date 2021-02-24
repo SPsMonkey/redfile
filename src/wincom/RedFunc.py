@@ -251,6 +251,26 @@ def add_red_title(str,isRedPaper): #添加大红头
         setFont()
         s.TypeText("\n")
 
+
+def add_xin_han_title(str,isredpaper):
+    textbox=doc.Shapes.AddTextbox(1,79.38,20,442.26,80,doc.Range(0,1)).TextFrame
+    textbox.HorizontalAnchor=2
+    textbox.TextRange.Text=str[0]
+    textbox.TextRange.font.Name="方正小标宋简体"
+    textbox.TextRange.font.Size=font_size["小初"]
+    textbox.TextRange.font.Color=255
+    textbox.TextRange.ParagraphFormat.Alignment = 1
+
+    s.ParagraphFormat.Alignment = 1  # 1是居中0 是靠左 2是靠右
+    maxlen = len(str[0])  # 找出字数最长的单位
+    s.Text = str[0] + "文件"
+    if maxlen > 12:
+        s.Font.Scaling = int(12 * 100 / maxlen)
+    s.MoveRight()
+    s.TypeText("\n")
+    s.Font.Scaling = 100
+
+
 def add_redfile_num(sybol,year,num,isRedPaper,adjustNumber):
     setFont()
     s.ParagraphFormat.Alignment = 1
@@ -494,3 +514,4 @@ def add_end(data):#添加版记 包括抄送 印发机关 印发日期
             s.Text = yinfa + " " * space + date + "印发"
             add_line(s.Range, row_current - 1, 1, 0)
             add_line( s.Range, row_current , 1, 0)
+
