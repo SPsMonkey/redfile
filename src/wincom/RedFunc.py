@@ -1,22 +1,5 @@
 import math
-cm_to_points = 28.35  # 1厘米为28.35磅
-font_size={ "初号":42,
-            "小初":36,
-            "一号":26,
-            "小一":24,
-            "二号":22,
-            "小二":18,
-            "三号":16,
-            "小三":15,
-            "四号":14,
-            "小四":12,
-            "五号":10.5,
-            "小五":9,
-            "六号":7.5,
-            "小六":6.5,
-            "七号":5.5,
-            "八号":5
-            }
+from .until import *
 s=None
 doc=None
 def setFont(fontName="仿宋",size="三号",color="黑色"):
@@ -81,9 +64,15 @@ def add_line(anchor,n,weight,color): #在文档中添加横线
     line.Weight=weight
     line.ForeColor.RGB=color
 
-def drawTheRedLine(height,anchor):
-    line = doc.Shapes.AddLine(79, height, 521.5, height, anchor).line
-    line.Weight = 3
+def drawTheRedLine(height,anchor,weight=3):
+    if anchor==False:
+        shape= doc.Shapes.AddLine(79, height, 521.5, height)
+        line=shape.line
+        shape.RelativeHorizontalPosition=1
+        shape.RelativeVerticalPosition = 1
+    else:
+        line = doc.Shapes.AddLine(79.38, height, 521.64, height, anchor).line
+    line.Weight = weight
     line.ForeColor.RGB = 255
 
 def setPage():#页面页面字号设置
@@ -252,21 +241,31 @@ def add_red_title(str,isRedPaper): #添加大红头
         s.TypeText("\n")
 
 
-def add_xin_han_title(str,isredpaper):
-    textbox=doc.Shapes.AddTextbox(1,79.38,20,442.26,80,doc.Range(0,1)).TextFrame
+def add_xin_han_title(str,isredpaper): #绘制信函格式的大红头和上边下边的双红线
+    shape=doc.Shapes.AddTextbox(1,79.38,3*cm_to_points-8.93,442.26,80)#使用文本框来写大红头，大红头字距离上边3cm,要剪掉字上边的空白
+    shape.Line.Visible=0
+    shape. RelativeHorizontalPosition=1
+    shape. RelativeVerticalPosition=1
+    textbox=shape.TextFrame
+    textbox.MarginBottom=0
+    textbox.MarginTop=0
+    textbox.MarginRight=0
+    textbox.MarginLeft=0
     textbox.HorizontalAnchor=2
     textbox.TextRange.Text=str[0]
     textbox.TextRange.font.Name="方正小标宋简体"
     textbox.TextRange.font.Size=font_size["小初"]
     textbox.TextRange.font.Color=255
-    textbox.TextRange.ParagraphFormat.Alignment = 1
-
-    s.ParagraphFormat.Alignment = 1  # 1是居中0 是靠左 2是靠右
+    textbox.TextRange.ParagraphFormat.Alignment = 1 # 1是居中0 是靠左 2是靠右
     maxlen = len(str[0])  # 找出字数最长的单位
-    s.Text = str[0] + "文件"
     if maxlen > 12:
-        s.Font.Scaling = int(12 * 100 / maxlen)
-    s.MoveRight()
+        textbox.TextRange.Font.Scaling = int(12 * 100 / maxlen)
+    drawTheRedLine(139.0645,False)
+    drawTheRedLine(143.0645, False,1.5)
+    drawTheRedLine(29.7*cm_to_points-2*cm_to_points-5, False,1.5)
+    drawTheRedLine(29.7*cm_to_points-2*cm_to_points-1, False)
+
+
     s.TypeText("\n")
     s.Font.Scaling = 100
 
