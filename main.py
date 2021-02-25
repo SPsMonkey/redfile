@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import json
-import configparser
 import os
 
 from src.interface.XiaXingWen import Xiaxinwen
@@ -10,7 +9,7 @@ from src.interface.ShangXingWen import Shangxinwen
 from src.interface.XinHan import XinHan
 from src.interface import redfileWigets
 from src.interface import about_dialog
-
+from simpleConfig import *
 
 def set_win_center(root, curWidth='', curHight=''):
     #设置窗口大小，并居中显示
@@ -103,42 +102,8 @@ def buttonbox(root):
     gen.pack(side=tk.RIGHT, padx=5, pady=5)
     box.pack()
 
-def create_config():
-    config = configparser.ConfigParser()
-    config['main'] = {'current_tab': 'xia_xing_wen','is_hint':'true'}
-    with open('config.ini', 'w') as configfile:
-        config.write(configfile)
-
-def read_config(section,key):
-    if not os.path.exists('config.ini'):
-        create_config()
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    if not (section in config.sections()):
-        config.add_section(section)
-    if not(key in config[section]):
-        if key=="current_tab":
-            config.set(section,key,"xia_xing_wen",)
-        if key=="shang_xing_wen":
-            config.set(section,key," ",)
-        if key=="xia_xing_wen":
-            config.set(section,key," ",)
-        if key == "xin_han":
-            config.set(section, key, " ", )
-        if key=="is_hint":
-            config.set(section, key, 'true', )
-    with open('config.ini', 'w') as configfile:
-        config.write(configfile)
-    result=config[section][key]
-    return result
 
 
-def write_config(section,key,value):
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    config.set(section,key,value)
-    with open('config.ini', 'w') as configfile:
-        config.write(configfile)
 
 def getkey(dic,value):
     for key in dic:
@@ -180,11 +145,11 @@ if __name__ == '__main__':
     buttonbox(root)
     #set_win_center(root, 450, 600)
     for key in tabsname:
-        filepath=read_config("main",tabsname[key])
+        filepath=read_config("main",tabsname[key],"")
         if  os.path.exists(filepath):
             open_peizhi(filename=filepath)
-    ishint=read_config("main","is_hint")
-    ctab=read_config("main", "current_tab")
+    ishint=read_config("main","is_hint","true")
+    ctab=read_config("main", "current_tab","xia_xing_wen")
     tabview.select(tabs[getkey(tabsname,ctab)])
     root.protocol('WM_DELETE_WINDOW', closeWindow)
     root.mainloop()

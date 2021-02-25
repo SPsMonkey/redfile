@@ -19,6 +19,7 @@ def start():
     app.Visible = True
     rf.doc = app.Documents.Add()
     rf.s= rf.doc.Application.Selection
+    rf.init(rf.s,rf.doc)
     rf.setPage()
 
 def gendown(data):
