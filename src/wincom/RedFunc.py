@@ -123,7 +123,8 @@ def add_red_title(str,isRedPaper): #添加大红头
 
 
 def add_xin_han_title(str,isredpaper): #绘制信函格式的大红头和上边下边的双红线
-    shape=doc.Shapes.AddTextbox(1,79.38,3*cm_to_points-8.93,442.26,80)#使用文本框来写大红头，大红头字距离上边3cm,要剪掉字上边的空白
+    s.TypeText("\n")
+    shape=doc.Shapes.AddTextbox(1,79.38,3*cm_to_points-8.93,442.26,80,doc.Range(0,0))#使用文本框来写大红头，大红头字距离上边3cm,要剪掉字上边的空白
     shape.Line.Visible=0
     shape. RelativeHorizontalPosition=1
     shape. RelativeVerticalPosition=1
