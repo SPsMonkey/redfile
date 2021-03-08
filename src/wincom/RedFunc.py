@@ -1,21 +1,16 @@
 import math
 from .until import *
-s=None
-doc=None
+
 from win32com.client import Dispatch
 
-class doc():
+class doc(base_doc):
     def __init__(self,data):
-        app = Dispatch('word.Application')
-        # 新建word文档
-        app.Visible = True
+        base_doc.__init__(self)
         self.data=data
-        self.doc = app.Documents.Add()
-        self.s = self.doc.Application.Selection
         self.setPage()
 
     def addFileNum(self):  # 份号
-        setFont("仿宋", "三号")
+        self.setFont("仿宋", "三号")
         self.s.TypeText(self.data["份号"])
         self.s.TypeText("\n")
 
@@ -25,7 +20,7 @@ class doc():
         if level == "无":
             pass
         else:
-            setFont("黑体", "三号")
+            self.setFont("黑体", "三号")
             self.s.TypeText(level)
             self.s.InsertSymbol(Font="黑体", CharacterNumber=9733, Unicode=True)  # 插入五角星
             self.s.TypeText(time)
@@ -36,18 +31,20 @@ class doc():
         if str == "无":
             pass
         else:
-            setFont("黑体", "三号")
-            s.TypeText(str)
-        s.TypeText("\n")
+            self.setFont("黑体", "三号")
+            self.s.TypeText(str)
+        self.s.TypeText("\n")
 
-    def add_red_title(self,str, isRedPaper):  # 添加大红头
-
+    def add_red_title(self):  # 添加大红头
+        str=self.data["发文机关"]
+        isRedPaper=self.data["是否使用红头纸"]
+        s=self.s
         if isRedPaper == 1:
-            setFont()
+            self.setFont()
             return
         else:
-            setFont("方正小标宋简体", "小初", "红色")
-            s.ParagraphFormat.Alignment = 1  # 1是居中0 是靠左 2是靠右
+            self.setFont("方正小标宋简体", "小初", "红色")
+            self.s.ParagraphFormat.Alignment = 1  # 1是居中0 是靠左 2是靠右
             maxwidth = 15.6  # 表格最大宽度 单位cm 初号字正常宽度1.3 如果超过12个字就需要压缩字宽度
 
             maxlen = len(str[0])  # 找出字数最长的单位
@@ -96,7 +93,7 @@ class doc():
                     s.Font.Scaling = int(11.8 * 100 / maxlen)
                 s.MoveDown()
 
-            setFont()
+            self.setFont()
             s.TypeText("\n")
 
     def add_redfile_num(self):#添加发文机关代字文件号
@@ -105,7 +102,8 @@ class doc():
         num=self.data["发文号"]
         isRedPaper=self.data["是否使用红头纸"]
         adjustNumber=self.data["高度调整"]
-        setFont()
+        s=self.s
+        self.setFont()
         s.ParagraphFormat.Alignment = 1
         if isRedPaper == 1:
             s.TypeBackspace()
@@ -133,85 +131,32 @@ class doc():
             s.ParagraphFormat.LineSpacing = 29.7675
         else:
             s.Text = sybol + "〔" + year + "〕" + num + "号"
-            cY = getPosY()  # 获取输入点所在的行数
-            drawTheRedLine(cY + 28, s.Range)
+            cY = self.getPosY()  # 获取输入点所在的行数
+            self.drawTheRedLine(cY + 28, s.Range)
             s.MoveRight()
             s.TypeText("\n")
+
+    def add_title(self):  # 添加标题，行间距要调成固定值29.7675磅 不然会占用2行
+        s=self.s
+        str=self.data["标题"]
+        self.setFont("方正小标宋简体", "二号")
+        s.ParagraphFormat.Alignment = 1  # 居中
+        s.ParagraphFormat.DisableLineHeightGrid = True
+        s.ParagraphFormat.WordWrap = True
+        s.ParagraphFormat.LineSpacingRule = 4  # 固定值
+        s.ParagraphFormat.LineSpacing = 29.7675
+        s.TypeText(str)
+
+        s.TypeText("\n")
+        self.setFont()
+        s.ParagraphFormat.LineSpacingRule = 0  # 单倍行距
+        s.ParagraphFormat.DisableLineHeightGrid = False
+        s.ParagraphFormat.WordWrap = False
         
-def typerednum(groupname,sybol,year,num,adjust):
-    if len(groupname) > 1:
-        # 计算需要的空格数一行总共28个全角字符 减去签发人4个末尾空格一个 再减去姓名字数
-        if adjust==False:
-            n = 23 - len(groupname[0])
-            s.TypeText(n * chr(12288) + "签发人：")
-        else:
-            s.TypeText(adjust*" ")
-        setFont("楷体")
-        s.TypeText(groupname[0] + "\n")
-        for i in range(1, len(groupname)):
-            if i == len(groupname) - 1:
-                setFont("仿宋")
-                s.TypeText(chr(12288) + sybol + "〔" + year + "〕" + num + "号")
-                if adjust==False:
-                    n = 46 - len(groupname[0]) * 2 - len(sybol) * 2 - len(num) - len(year)
-                else:
-                    n=adjust-len(sybol) * 2 - len(num) - len(year)-8
-                s.TypeText(n * " ")
-                s.Text = groupname[i]
-                setFont("楷体")
-            else:
-                s.TypeText(adjust*" " + groupname[i] + "\n")
-    else:
-        s.TypeText(chr(12288) + sybol + "〔" + year + "〕" + num + "号")
-        if adjust==False:
-            n = 38 - len(sybol) * 2 - len(num) - len(year) - len(groupname[0]) * 2
-            s.TypeText(n * " " + "签发人：")
-        else:
-            s.TypeText(adjust*" ")
-        s.Text = groupname[0]
-        setFont("楷体")
-    if adjust==False:
-        cY = getPosY()  # 获取输入点所在的高度
-        drawTheRedLine(cY + 28, s.Range)
-    s.MoveRight()
-    s.TypeText("\n")
-
-
-def add_xin_han_title(str,isredpaper): #绘制信函格式的大红头和上边下边的双红线
-    s.TypeText("\n")
-    shape=doc.Shapes.AddTextbox(1,79.38,3*cm_to_points-8.93,442.26,80,doc.Range(0,0))#使用文本框来写大红头，大红头字距离上边3cm,要剪掉字上边的空白
-    shape.Line.Visible=0
-    shape. RelativeHorizontalPosition=1
-    shape. RelativeVerticalPosition=1
-    textbox=shape.TextFrame
-    textbox.MarginBottom=0
-    textbox.MarginTop=0
-    textbox.MarginRight=0
-    textbox.MarginLeft=0
-    textbox.HorizontalAnchor=2
-    textbox.TextRange.Text=str[0]
-    textbox.TextRange.font.Name="方正小标宋简体"
-    textbox.TextRange.font.Size=font_size["小初"]
-    textbox.TextRange.font.Color=255
-    textbox.TextRange.ParagraphFormat.Alignment = 1 # 1是居中0 是靠左 2是靠右
-    maxlen = len(str[0])  # 找出字数最长的单位
-    if maxlen > 12:
-        textbox.TextRange.Font.Scaling = int(12 * 100 / maxlen)
-    drawTheRedLine(139.0645,False)
-    drawTheRedLine(143.0645, False,1.5)
-    drawTheRedLine(29.7*cm_to_points-2*cm_to_points-5, False,1.5)
-    drawTheRedLine(29.7*cm_to_points-2*cm_to_points-1, False)
-
-
-    s.TypeText("\n")
-    s.Font.Scaling = 100
-
-
-
 
 
 def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber,adjustNumber2):
-    setFont()
+    self.setFont()
     s.ParagraphFormat.Alignment = 0 #左对齐
     s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit=False #这个选项为段落里自动调整中文与数字之间的距离，会在中文和数字间加了额外距离
     Names = names.split()
@@ -268,23 +213,10 @@ def add_red_num_and_qian_fa_ren(sybol,year,num,names,isRedPaper,adjustNumber,adj
         typerednum(groupname,sybol,year,num,False)
     s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit = True
 
-def add_title(str): #添加标题，行间距要调成固定值29.7675磅 不然会占用2行
-    setFont("方正小标宋简体","二号")
-    s.ParagraphFormat.Alignment = 1 #居中
-    s.ParagraphFormat.DisableLineHeightGrid = True
-    s.ParagraphFormat.WordWrap = True
-    s.ParagraphFormat.LineSpacingRule = 4 #固定值
-    s.ParagraphFormat.LineSpacing = 29.7675
-    s.TypeText(str)
 
-    s.TypeText("\n")
-    setFont()
-    s.ParagraphFormat.LineSpacingRule = 0  # 单倍行距
-    s.ParagraphFormat.DisableLineHeightGrid = False
-    s.ParagraphFormat.WordWrap = False
 
 def add_content(str):
-    setFont()
+    self.setFont()
     s.ParagraphFormat.Alignment = 0
     s.TypeText(str)
     s.TypeText("\n")
@@ -309,7 +241,7 @@ def add_fujian_shuo_min(data):
         s.ParagraphFormat.HangingPunctuation = False
 
 def add_name_date(name,date):
-    setFont()
+    self.setFont()
     s.TypeText("\n\n")
     s.ParagraphFormat.Alignment = 2  #段落右对齐
     s.ParagraphFormat.WordWrap = False  #让行末的空格显示出来
