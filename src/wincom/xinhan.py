@@ -1,7 +1,7 @@
 
-from .RedFunc import doc
+from .downfile import downfile
 from .until import *
-class xinhan(doc):
+class xinhan(downfile):
     def __init__(self,data):
         doc.__init__(self,data)
 

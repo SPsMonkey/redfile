@@ -21,7 +21,7 @@ font_size={ "初号":42,
             "八号":5
             }
 
-class base_doc():
+class doc():
     def __init__(self):
         app = Dispatch('word.Application')
         # 新建word文档

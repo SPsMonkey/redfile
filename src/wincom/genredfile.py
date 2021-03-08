@@ -12,7 +12,7 @@ data = {"份号": "234567", "保密等级": "紧急", "保密期限": "2年", "�
         "抄送机关": "县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
         "印发机关": "县农业农村局",
         "印发日期": "2020年3月21日"}
-from . import RedFunc as rf
+from . import downfile as rf
 def start():
     app = Dispatch('word.Application')
     # 新建word文档
