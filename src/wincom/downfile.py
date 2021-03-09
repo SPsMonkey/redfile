@@ -26,7 +26,7 @@ class downfile(doc):
             self.s.TypeText(time)
         self.s.TypeText("\n")
 
-    def add_emergency_level(self):
+    def add_emergency_level(self):#紧急程度
         str=self.data["紧急程度"]
         if str == "无":
             pass
@@ -55,14 +55,14 @@ class downfile(doc):
 
             if len(str) == 1:  # 单个单位行文
                 s.Text = str[0] + "文件"
-                if maxlen > 12:
+                if maxlen > 12:  #文字太多就调整字符宽度
                     s.Font.Scaling = int(12 * 100 / maxlen)
                 s.MoveRight()
                 s.TypeText("\n")
-                s.Font.Scaling = 100
+                s.Font.Scaling = 100 #字符宽度调整回来
 
             else:  # 多个单位联合行文
-                table = doc.Tables.Add(s.Range, len(str), 2)  # 创建有2列多行的一个表格
+                table = self.doc.Tables.Add(s.Range, len(str), 2)  # 创建有2列多行的一个表格
                 table.Range.Rows.Alignment = 1
                 cols = table.Columns
                 if maxlen >= 12:  # 如果超过12个字符表格设置到最宽，列宽按比例分配
@@ -158,7 +158,7 @@ class downfile(doc):
         self.setFont()
         s=self.s
         s.ParagraphFormat.Alignment = 0
-        s.TypeText(str)
+        s.TypeText(self.data["文件内容"])
         s.TypeText("\n")
 
     def add_fujian_shuo_min(self):
@@ -211,7 +211,7 @@ class downfile(doc):
             s.TypeText("\n"+date+"    \n")
 
 
-    def add_fujian(self,data):
+    def add_fujian(self):
         s=self.s
         data=self.data["附件"]
         if data[0]=="":

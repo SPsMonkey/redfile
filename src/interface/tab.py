@@ -1,11 +1,12 @@
 from tkinter import  *
 from .redfileWigets import *
+from .edit_hint import hintmsg,itemname
 from tkinter import ttk
 
 class fen_hao(label): #份号
     def __init__(self,master,rowNum,clomNum):
         label.__init__(self,master,"份号：",rowNum,clomNum)
-
+        self.name=hintmsg.keys()
     def check2(self,s):
         if s=="":
             return ""
@@ -20,24 +21,28 @@ class fen_hao(label): #份号
 class bao_mi_deng_ji(option):
     def __init__(self, master, rowNum, clomNum):
         option.__init__(self, master, "保密等级：", rowNum, clomNum,("无", "绝密","机密","秘密" ))
+        self.name="保密等级"
     def hint_message(self):
         return "涉密公文应当根据涉密程度分别标注“绝密”“机密”“秘密”。"
 
 class bao_mi_qi_xian(label):
     def __init__(self, master, rowNum, clomNum):
         label.__init__(self, master, "保密期限：", rowNum, clomNum)
+        self.name="保密期限"
     def hint_message(self):
         return "涉密公文应当根据情况标注保密期限。例如：1年"
 
 class jin_ji_cheng_du(option):
     def __init__(self, master, rowNum, clomNum):
         option.__init__(self, master, "紧急程度：", rowNum, clomNum,("无", "特急","加急","特提","平急" ))
+        self.name="紧急程度"
     def hint_message(self):
         return "公文送达和办理的时限要求。根据紧急程度，紧急公文应当分别标注“特急”“加急”，电报应当分别标注“特提”“特急”“加急”“平急”。"
 
 class fa_wen_ji_guan(multiRow):
     def __init__(self,master,rownum):
         multiRow.__init__(self,master,rownum,"发文机关：")
+        self.name="发文机关"
 
     def check2(self,s):
         if s[0]=="":
@@ -50,6 +55,7 @@ class fa_wen_ji_guan(multiRow):
 class ji_guan_dai_zi(label):
     def __init__(self, master, rowNum, clomNum):
         label.__init__(self, master, "发文机关代字：", rowNum, clomNum)
+        self.name="发文机关代字"
     def check2(self,s):
         if s=="":
             return "发文机关代字不能为空。"
@@ -143,7 +149,6 @@ class chao_song(longlabel):
     def hint_message(self):
         return "除主送机关外需要执行或者知晓公文内容的其他机关，应当使用机关全称、规范化简称或者同类型机关统称。名称之间用顿号隔开。"
 
-
 class yin_fa(longlabel):
     def __init__(self, master, rowNum, clomNum):
         longlabel.__init__(self, master, "印发机关：", rowNum, clomNum)
@@ -152,6 +157,7 @@ class yin_fa(longlabel):
 
 class is_red_paper(baseWiget):
     def __init__(self,master,rownum,columnnum):
+        baseWiget.__init__(self)
         checkvar=IntVar()
         check = Checkbutton(master, text="是否使用红头纸打印",variable = checkvar, \
                  onvalue = 1, offvalue = 0)
@@ -201,7 +207,11 @@ class tab(Frame):
         body = Frame(self)
         self.allWigets={}
         self.FrameBody=body
-        self.initial_focus = self.body(body)
+        wegets={}
+        self.body(body,wegets)
+        for w in wegets:
+            wegets[w].required=True
+            self.allWigets[w]=wegets[w]
         body.pack(padx=5, pady=5)
 
         show_hide = Button(body, text="显示其他选项", command=lambda: self.show_other(), default=ACTIVE)
@@ -212,18 +222,18 @@ class tab(Frame):
 
         other_body=Frame(self)
         self.other_body=other_body
-        self.other(other_body)
+        self.other(other_body,self.allWigets)
         self.is_hide=True
 
         self.main_text_body=Frame(self)
         self.allWigets["文件内容"] =maintext(self.main_text_body)
         self.main_text_body.pack()
 
-    def body(self, master):
+    def body(self, master,wegets):
 
         pass
 
-    def other(self,master):
+    def other(self,master,wegets):
         pass
 
     def apply(self):
@@ -257,12 +267,3 @@ class tab(Frame):
         pass
 
 
-
-
-if __name__ == '__main__':
-    root = Tk()
-    tab=tab(root)
-    tab.pack(expand='yes', fill='x')
-    print (tab.checkDate("2020年6月32日"))
-    root.mainloop()
-    pass

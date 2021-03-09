@@ -27,8 +27,7 @@ class doc():
         # 新建word文档
         app.Visible = True
         self.doc = app.Documents.Add()
-        self.s = self.doc.Application.self.s
-        self.setPage()
+        self.s = app.Selection
 
     def setFont(self,fontName="仿宋",size="三号",color="黑色"):
         self.s.font.Name=fontName
@@ -116,7 +115,7 @@ class doc():
         # 获得文档的第一个窗口
         w.view.seekview = 4
         # 获得页眉页脚视图
-        se = w.self.s
+        se = w.Selection
         # 获取窗口的选择对象
         se.headerfooter.pagenumbers.startingnumber = 1
         # 设置起始页码

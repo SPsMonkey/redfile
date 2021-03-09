@@ -6,8 +6,7 @@ import tkinter.messagebox
 from ..wincom import genredfile
 
 class Xiaxinwen(tab):
-    def body(self, master):
-        xia=self.allWigets
+    def body(self, master,xia):
         # 一般用6位3号阿拉伯数字
         xia["发文机关代字"]=ji_guan_dai_zi(master,0,0)
         xia["年份"]=nian_fen(master,0,2)
@@ -18,8 +17,7 @@ class Xiaxinwen(tab):
         xia["成文日期"]=cheng_wen_ri_qi(master, 51,0)
 
 
-    def other(self,master):
-        xia = self.allWigets
+    def other(self,master,xia):
         xia["是否使用红头纸"]=is_red_paper(master,0,0)
         xia["高度调整"]=tiao_zhen_can_shu(master,0,2)
         xia["份号"] = fen_hao(master, 1, 0)

@@ -4,7 +4,8 @@ from . import const
 from . import edit_hint
 #所有控件的基类
 class baseWiget():
-
+    def __init__(self,required=False):
+        self.required=required
     def get(self):
         pass
     def set(self):
@@ -20,6 +21,7 @@ class baseWiget():
 
 class multiRow(baseWiget):
     def __init__(self,master,rownum,text):
+        baseWiget.__init__(self)
         self.FrameBody=master
         self.row_number=rownum
         self.list=[]
@@ -72,6 +74,7 @@ class multiRow(baseWiget):
 
 class label(baseWiget):
     def __init__(self,master,label_text,rowNum,clomNum):
+        baseWiget.__init__(self)
         entry = Entry(master, width=8)
         entry.grid(row=rowNum, column=clomNum + 1, padx=const.padx, pady=const.pady, sticky=W)
         self.init(entry, master, label_text, rowNum, clomNum)
@@ -135,6 +138,7 @@ class date(label):
 
 class option(baseWiget):
     def __init__(self, master, label_text, rowNum, clomNum,values):
+        baseWiget.__init__(self)
         Label(master, text=label_text).grid(row=rowNum, column=clomNum, sticky=E)
         chosenString = StringVar()
         cobobox = ttk.Combobox(master, width=5, textvariable=chosenString, state="readonly")
@@ -163,6 +167,7 @@ class option(baseWiget):
 
 class maintext(baseWiget):
     def __init__(self, parent):
+        baseWiget.__init__(self)
         Label(parent, text="*文件内容:").pack(side='top', anchor='w')
         box=Frame(parent)
         scrollbar = Scrollbar(box)

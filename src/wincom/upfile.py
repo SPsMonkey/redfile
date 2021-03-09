@@ -1,10 +1,57 @@
 from .downfile import downfile
 class upfile (downfile):
-    def __init__(self):
-        pass
+    def __init__(self,data):
+        downfile.__init__(self,data)
 
-    def add_red_num_and_qian_fa_ren(sybol, year, num, names, isRedPaper, adjustNumber, adjustNumber2):
+    def typerednum(self,groupname, sybol, year, num, adjust):
+        s=self.s
+        if len(groupname) > 1:
+            # 计算需要的空格数一行总共28个全角字符 减去签发人4个末尾空格一个 再减去姓名字数
+            if adjust == False:
+                n = 23 - len(groupname[0])
+                s.TypeText(n * chr(12288) + "签发人：")
+            else:
+                s.TypeText(adjust * " ")
+            self.setFont("楷体")
+            s.TypeText(groupname[0] + "\n")
+            for i in range(1, len(groupname)):
+                if i == len(groupname) - 1:
+                    self.setFont("仿宋")
+                    s.TypeText(chr(12288) + sybol + "〔" + year + "〕" + num + "号")
+                    if adjust == False:
+                        n = 46 - len(groupname[0]) * 2 - len(sybol) * 2 - len(num) - len(year)
+                    else:
+                        n = adjust - len(sybol) * 2 - len(num) - len(year) - 8
+                    s.TypeText(n * " ")
+                    s.Text = groupname[i]
+                    self.setFont("楷体")
+                else:
+                    s.TypeText(adjust * " " + groupname[i] + "\n")
+        else:
+            s.TypeText(chr(12288) + sybol + "〔" + year + "〕" + num + "号")
+            if adjust == False:
+                n = 38 - len(sybol) * 2 - len(num) - len(year) - len(groupname[0]) * 2
+                s.TypeText(n * " " + "签发人：")
+            else:
+                s.TypeText(adjust * " ")
+            s.Text = groupname[0]
+            self.setFont("楷体")
+        if adjust == False:
+            cY = self.getPosY()  # 获取输入点所在的高度
+            self.drawTheRedLine(cY + 28, s.Range)
+        s.MoveRight()
+        s.TypeText("\n")
+
+    def add_red_num_and_qian_fa_ren(self):
+        sybol=self.data["发文机关代字"]
+        year=self.data["年份"]
+        num=self.data["发文号"]
+        names=self.data["签发人"]
+        isRedPaper=self.data["是否使用红头纸"]
+        adjustNumber=self.data["高度调整"]
+        adjustNumber2=self.data["签发人调整"]
         self.setFont()
+        s=self.s
         s.ParagraphFormat.Alignment = 0  # 左对齐
         s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit = False  # 这个选项为段落里自动调整中文与数字之间的距离，会在中文和数字间加了额外距离
         Names = names.split()
@@ -50,7 +97,7 @@ class upfile (downfile):
             s.ParagraphFormat.DisableLineHeightGrid = False
             s.ParagraphFormat.WordWrap = False
             s.TypeText("\n" * row)
-            typerednum(groupname, sybol, year, num, adjustNumber2)
+            self.typerednum(groupname, sybol, year, num, adjustNumber2)
             s.ParagraphFormat.DisableLineHeightGrid = True
             s.ParagraphFormat.WordWrap = True
             s.ParagraphFormat.LineSpacingRule = 4  # 固定值
@@ -58,6 +105,6 @@ class upfile (downfile):
             s.TypeText("\n")
             s.ParagraphFormat.LineSpacing = 29.7675
         else:
-            typerednum(groupname, sybol, year, num, False)
+            self.typerednum(groupname, sybol, year, num, False)
         s.ParagraphFormat.AddSpaceBetweenFarEastAndDigit = True
 

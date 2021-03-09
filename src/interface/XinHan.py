@@ -3,16 +3,14 @@ import tkinter.messagebox
 from ..wincom import genredfile
 
 class XinHan(tab):
-    def body(self, master):
-        xia=self.allWigets
+    def body(self, master,xia):
 
         xia["发文机关"]=fa_wen_ji_guan(master,0)
         xia["标题"]=biao_ti(master,5,0)
         xia["成文日期"]=cheng_wen_ri_qi(master,6,0)
 
 
-    def other(self,master):
-        xia = self.allWigets
+    def other(self,master,xia):
         xia["是否使用红头纸"]=is_red_paper(master,0,0)
         xia["高度调整"]=tiao_zhen_can_shu(master,0,2)
         xia["份号"] = fen_hao(master, 1, 0)

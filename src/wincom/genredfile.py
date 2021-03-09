@@ -2,8 +2,9 @@ from win32com.client import Dispatch
 
 data = {"份号": "234567", "保密等级": "紧急", "保密期限": "2年", "紧急程度": "特急",
         "发文机关": ["湖南省娄底市怀农业农村局", "县扶贫开发办", "县劳动与保障局"],
-        "是否使用红头纸": "",
+        "是否使用红头纸": "","高度调整":"2",
         "发文机关代字": "泸农发", "年份": "2019", "发文号": "6",
+        "签发人":"李桂香 王大妈 张三 李四","签发人调整":"0",
         "标题": "XX县农业农村局关于什么",
         "文件内容": "局属各单位：\n根据。。。。。。。。。。\n\n\n\n\n\n\n\n\n\n\n\n结束",
         "成文日期": "2020年6月12日",
@@ -12,58 +13,50 @@ data = {"份号": "234567", "保密等级": "紧急", "保密期限": "2年", "�
         "抄送机关": "县畜牧局、中华人民共和国内蒙古、中国甘肃省那然色布斯台音布拉格农业综合执法局、中国甘肃省那然色布斯台音布拉格农业综合执法局",
         "印发机关": "县农业农村局",
         "印发日期": "2020年3月21日"}
-from . import downfile as rf
-def start():
-    app = Dispatch('word.Application')
-    # 新建word文档
-    app.Visible = True
-    rf.doc = app.Documents.Add()
-    rf.s= rf.doc.Application.Selection
-    rf.init(rf.s,rf.doc)
-    rf.setPage()
-
+from .  downfile  import *
+from .  upfile import *
+from .  xinhan import *
 def gendown(data):
-    start()
-    rf.addFileNum(data["份号"])
-    rf.add_SecurityLevel_Time(data["保密等级"],data["保密期限"])
-    rf.add_emergency_level(data["紧急程度"])
-    rf.add_red_title(data["发文机关"],data["是否使用红头纸"])
+    rf=downfile(data)
+    rf.addFileNum()
+    rf.add_SecurityLevel_Time()
+    rf.add_emergency_level()
+    rf.add_red_title()
     rf.inser_empty_row(1)
-    rf.add_redfile_num(data["发文机关代字"],data["年份"],data["发文号"],data["是否使用红头纸"],data["高度调整"])
+    rf.add_redfile_num()
     rf.inser_empty_row(2)
-    rf.add_title(data["标题"])
+    rf.add_title()
     rf.inser_empty_row(1)
-    rf.add_content(data["文件内容"])
-    rf.add_fujian_shuo_min(data["附件"])
-    rf.add_name_date(data["发文机关"],data["成文日期"])
-    rf.add_fujian(data["附件"])
-    rf.add_end(data)
+    rf.add_content()
+    rf.add_fujian_shuo_min()
+    rf.add_name_date()
+    rf.add_fujian()
+    rf.add_end()
 
     #156/442.5 纸张mm数比线条单位比值  33+10.5x换算成
     #new_document.SaveAs("G:/python/win32com/3.docx")
     #new_document.Close()
     #app.Quit()
 def genup(data):
-    start()
-    rf.addFileNum(data["份号"])
-    rf.add_SecurityLevel_Time(data["保密等级"],data["保密期限"])
-    rf.add_emergency_level(data["紧急程度"])
-    rf.add_red_title(data["发文机关"],data["是否使用红头纸"])
+    rf=upfile(data)
+    rf.addFileNum()
+    rf.add_SecurityLevel_Time()
+    rf.add_emergency_level()
+    rf.add_red_title()
     rf.inser_empty_row(1)
-    rf.add_red_num_and_qian_fa_ren(data["发文机关代字"],data["年份"],data["发文号"],\
-        data["签发人"],data["是否使用红头纸"],data["高度调整"],data["签发人调整"])
+    rf.add_red_num_and_qian_fa_ren()
     rf.inser_empty_row(2)
-    rf.add_title(data["标题"])
+    rf.add_title()
     rf.inser_empty_row(1)
-    rf.add_content(data["文件内容"])
-    rf.add_fujian_shuo_min(data["附件"])
-    rf.add_name_date(data["发文机关"],data["成文日期"])
-    rf.add_fujian(data["附件"])
-    rf.add_end(data)
+    rf.add_content()
+    rf.add_fujian_shuo_min()
+    rf.add_name_date()
+    rf.add_fujian()
+    rf.add_end()
 
 def genxinhan(data):
-    start()
-    rf.add_xin_han_title(data["发文机关"],data["是否使用红头纸"])
+    rf=xinhan(data)
+    rf.add_xin_han_title()
 
 
 if __name__ == '__main__':
