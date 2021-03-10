@@ -11,13 +11,18 @@ class baseWiget():
     def set(self):
         pass
     def hint_message(self):
-        return None
+        return edit_hint.hintmsg[self.name]
 
     def check2(self,s):
         return ""
 
     def check(self):
-        return self.check2(self.get())
+        if self.required==True and self.isempty():
+            return self.name+"不能为空！"
+        elif self.isempty and self.required==False:
+            return ""
+        else:
+            return self.check2(self.get())
 
 class multiRow(baseWiget):
     def __init__(self,master,rownum,text):
@@ -36,6 +41,12 @@ class multiRow(baseWiget):
             text=i["entry"].get()
             texts.append(text)
         return texts
+    def isempty(self):
+        t=self.get()
+        if t[0]=="":
+            return True
+        else:
+            return False
 
     def set(self,data):
         n= len(data)-len(self.list)
@@ -91,18 +102,27 @@ class label(baseWiget):
 
     def get(self):
         return self.entry.get()
+    def isempty(self):
+        i=self.get()
+        if i=="":
+            return True
+        else:
+            return False
+
     def set(self,data):
         self.entry.set(data)
 
 class longlabel(label):
     def __init__(self, master, label_text, rowNum, clomNum):
         entry = Entry(master, width=38)
+        baseWiget.__init__(self)
         entry.grid(row=rowNum, column=1, columnspan=5, padx=const.padx, pady=const.pady, sticky=W)
         self.init(entry, master, label_text, rowNum, clomNum)
 
 class date(label):
     def __init__(self, master, label_text, rowNum, clomNum):
         entry = Entry(master, width=18)
+        baseWiget.__init__(self)
         entry.grid(row=rowNum, column=1, columnspan=2, padx=const.padx, pady=const.pady, sticky=W)
         self.init(entry, master, label_text, rowNum, clomNum)
 
@@ -155,6 +175,12 @@ class option(baseWiget):
 
     def get(self):
         return self.str.get()
+    def isempty(self):
+        i=self.get()
+        if i=="":
+            return True
+        else:
+            return False
 
     def set(self,data):
         combox=self.combox["values"]
@@ -184,6 +210,12 @@ class maintext(baseWiget):
 
     def get(self):
         return self.text.get('0.0','end')[:-1]
+    def isempty(self):
+        i=self.get()
+        if i=="":
+            return True
+        else:
+            return False
     def set(self,data):
         self.text.delete('1.0', 'end')
         self.text.insert('1.0',data)
